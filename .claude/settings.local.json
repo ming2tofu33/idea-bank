@@ -3,7 +3,12 @@
     "allow": [
       "Bash(npx next:*)",
       "Bash(npx shadcn@latest init -d --base-color neutral)",
-      "Bash(npx shadcn@latest init -d)"
+      "Bash(npx shadcn@latest init -d)",
+      "Bash(npm install:*)",
+      "Bash(npx tsc:*)",
+      "Bash(mkdir -p src/server)",
+      "Bash(mv src/lib/firebase.ts src/server/firebase.ts)",
+      "Bash(mv src/lib/openai.ts src/server/openai.ts)"
     ]
   }
 }

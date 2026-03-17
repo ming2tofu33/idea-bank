@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { db } from "@/lib/firebase";
-import { callOpenAI, MODELS } from "@/lib/openai";
+import { db } from "@/server/firebase";
+import { callOpenAI, MODELS } from "@/server/openai";
 
 export async function GET() {
   const results: Record<string, unknown> = {};
