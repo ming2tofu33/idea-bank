@@ -29,6 +29,9 @@ export async function callOpenAI(params: {
 }) {
   const startTime = Date.now();
 
+  // o-series reasoning models (o4-mini, o3, etc.) don't support temperature
+  const isReasoningModel = params.model.startsWith("o");
+
   const response = await openai.chat.completions.create({
     model: params.model,
     messages: [
@@ -36,7 +39,7 @@ export async function callOpenAI(params: {
       { role: "user", content: params.userPrompt },
     ],
     response_format: { type: "json_object" },
-    temperature: params.temperature ?? 0.8,
+    ...(isReasoningModel ? {} : { temperature: params.temperature ?? 0.8 }),
   });
 
   const latencyMs = Date.now() - startTime;
