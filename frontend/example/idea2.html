@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Idea Lab - The Startup Vending Machine</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#136aec",
+                        "background-light": "#FDFCF8",
+                        "background-dark": "#101722",
+                        "pastel-blue": "#E0F2FE",
+                        "pastel-green": "#DCFCE7",
+                        "pastel-purple": "#F3E8FF",
+                        "pastel-pink": "#FCE7F3",
+                        "pastel-orange": "#FFEDD5",
+                        "pastel-yellow": "#FEF9C3",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "1.5rem", // 24px as requested
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+        .marshmallow-pill {
+            transition: transform 0.2s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+        .marshmallow-pill:hover {
+            transform: scale(1.05) translateY(-2px);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+<!-- Top Navigation -->
+<header class="flex items-center justify-between px-10 py-6 max-w-7xl mx-auto">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-primary">
+<div class="size-8 bg-primary/10 rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">biotech</span>
+</div>
+<h2 class="text-xl font-bold tracking-tight">Idea Lab</h2>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="#">Explore</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="#">Showcase</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-medium hover:text-primary transition-colors" href="#">Community</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-2 px-4 py-2 text-slate-600 dark:text-slate-400 font-medium text-sm">
+<span class="material-symbols-outlined text-lg">search</span>
+                Search
+            </button>
+<button class="bg-primary text-white px-6 py-2.5 rounded-full font-bold text-sm shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all">
+                Sign In
+            </button>
+</div>
+</header>
+<main class="max-w-5xl mx-auto px-6 pt-8 pb-20">
+<!-- Hero Title -->
+<div class="text-center mb-12">
+<h1 class="text-5xl font-bold tracking-tight mb-4 text-slate-900 dark:text-white">What will you build today?</h1>
+<p class="text-slate-500 dark:text-slate-400 text-lg max-w-2xl mx-auto">
+                Select your ingredients from the Vending Machine to dispense a fresh startup idea.
+            </p>
+</div>
+<!-- The Vending Machine -->
+<div class="relative bg-slate-100 dark:bg-slate-800 p-8 rounded-lg shadow-2xl border-t-8 border-slate-200 dark:border-slate-700 mx-auto">
+<!-- Glass Display Area -->
+<div class="glass-panel rounded-lg min-h-[500px] p-8 relative overflow-hidden flex flex-wrap gap-3 justify-center content-start">
+<!-- Marshmallow Keyword Pills -->
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-blue text-blue-700 font-semibold flex items-center justify-center">AI</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-green text-green-700 font-semibold flex items-center justify-center">SaaS</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-purple text-purple-700 font-semibold flex items-center justify-center">Web3</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-pink text-pink-700 font-semibold flex items-center justify-center">Wellness</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-orange text-orange-700 font-semibold flex items-center justify-center">EdTech</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-yellow text-yellow-700 font-semibold flex items-center justify-center">FinTech</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-blue text-blue-700 font-semibold flex items-center justify-center">BioTech</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-green text-green-700 font-semibold flex items-center justify-center">AgriTech</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-purple text-purple-700 font-semibold flex items-center justify-center">Creator Economy</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-pink text-pink-700 font-semibold flex items-center justify-center">E-commerce</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-orange text-orange-700 font-semibold flex items-center justify-center">No-Code</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-yellow text-yellow-700 font-semibold flex items-center justify-center">Robotics</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-blue text-blue-700 font-semibold flex items-center justify-center">Space</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-green text-green-700 font-semibold flex items-center justify-center">Green Energy</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-purple text-purple-700 font-semibold flex items-center justify-center">Cybersecurity</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-pink text-pink-700 font-semibold flex items-center justify-center">Logistics</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-orange text-orange-700 font-semibold flex items-center justify-center">AR/VR</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-yellow text-yellow-700 font-semibold flex items-center justify-center">CleanTech</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-blue text-blue-700 font-semibold flex items-center justify-center">PropTech</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-green text-green-700 font-semibold flex items-center justify-center">IoT</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-purple text-purple-700 font-semibold flex items-center justify-center">Mental Health</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-pink text-pink-700 font-semibold flex items-center justify-center">Gaming</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-orange text-orange-700 font-semibold flex items-center justify-center">PetCare</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-yellow text-yellow-700 font-semibold flex items-center justify-center">GovTech</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-blue text-blue-700 font-semibold flex items-center justify-center">HealthTech</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-green text-green-700 font-semibold flex items-center justify-center">Future of Work</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-purple text-purple-700 font-semibold flex items-center justify-center">Personal Finance</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-pink text-pink-700 font-semibold flex items-center justify-center">TravelTech</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-orange text-orange-700 font-semibold flex items-center justify-center">RetailTech</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-yellow text-yellow-700 font-semibold flex items-center justify-center">FoodTech</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-blue text-blue-700 font-semibold flex items-center justify-center">LegalTech</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-green text-green-700 font-semibold flex items-center justify-center">AdTech</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-purple text-purple-700 font-semibold flex items-center justify-center">InsurTech</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-pink text-pink-700 font-semibold flex items-center justify-center">AutoTech</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-orange text-orange-700 font-semibold flex items-center justify-center">Deep Learning</button>
+<button class="marshmallow-pill h-12 px-6 rounded-full bg-pastel-yellow text-yellow-700 font-semibold flex items-center justify-center">Neuroscience</button>
+<!-- Internal reflections for glass effect -->
+<div class="absolute top-0 left-0 w-full h-20 bg-gradient-to-b from-white/20 to-transparent pointer-events-none"></div>
+<div class="absolute inset-0 border-[12px] border-white/10 rounded-lg pointer-events-none"></div>
+</div>
+<!-- Controls and Slot -->
+<div class="mt-8 flex flex-col md:flex-row gap-8 items-end">
+<!-- Selection Tray / Collection Slot -->
+<div class="flex-1 w-full">
+<p class="text-xs font-bold uppercase tracking-widest text-slate-400 mb-3 px-1">Your Collection Tray</p>
+<div class="bg-slate-200/50 dark:bg-slate-900/50 rounded-lg h-24 p-4 border-b-4 border-slate-300 dark:border-slate-800 flex items-center gap-3 overflow-x-auto shadow-inner">
+<div class="h-10 px-4 rounded-full bg-pastel-blue text-blue-700 font-semibold text-sm flex items-center shadow-sm border border-white/50">AI</div>
+<div class="h-10 px-4 rounded-full bg-pastel-green text-green-700 font-semibold text-sm flex items-center shadow-sm border border-white/50">Green Energy</div>
+<div class="h-10 px-4 rounded-full bg-white/20 border-2 border-dashed border-slate-300 dark:border-slate-700 text-slate-400 font-medium text-xs flex items-center italic">Select more...</div>
+</div>
+</div>
+<!-- Dispense Button -->
+<div class="flex flex-col gap-4 min-w-[200px]">
+<button class="group relative bg-primary text-white h-20 px-8 rounded-full font-bold text-lg shadow-xl shadow-primary/30 hover:shadow-primary/50 transition-all flex items-center justify-center gap-3 overflow-hidden">
+<span class="relative z-10">Dispense Idea</span>
+<span class="material-symbols-outlined relative z-10 group-hover:translate-y-1 transition-transform">south</span>
+<div class="absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+</button>
+<div class="flex justify-center gap-2">
+<div class="size-3 rounded-full bg-green-500 animate-pulse"></div>
+<span class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Ready to Mix</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Featured Section -->
+<section class="mt-24 grid md:grid-cols-3 gap-8">
+<div class="p-8 rounded-lg bg-white dark:bg-slate-900 shadow-sm border border-slate-100 dark:border-slate-800">
+<div class="size-12 rounded-lg bg-pastel-blue flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-blue-600">lightbulb</span>
+</div>
+<h3 class="text-lg font-bold mb-2">Smart Mixing</h3>
+<p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">Our proprietary AI algorithm blends your chosen keywords into viable, unique business models.</p>
+</div>
+<div class="p-8 rounded-lg bg-white dark:bg-slate-900 shadow-sm border border-slate-100 dark:border-slate-800">
+<div class="size-12 rounded-lg bg-pastel-pink flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-pink-600">auto_awesome</span>
+</div>
+<h3 class="text-lg font-bold mb-2">Market Insight</h3>
+<p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">Every generated idea comes with a micro-analysis of target audience and competitive landscape.</p>
+</div>
+<div class="p-8 rounded-lg bg-white dark:bg-slate-900 shadow-sm border border-slate-100 dark:border-slate-800">
+<div class="size-12 rounded-lg bg-pastel-green flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-green-600">group</span>
+</div>
+<h3 class="text-lg font-bold mb-2">Community Voting</h3>
+<p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">Share your best results with the Lab community and get early feedback from fellow builders.</p>
+</div>
+</section>
+<!-- Footer Info -->
+<footer class="mt-24 pt-12 border-t border-slate-200 dark:border-slate-800 text-center">
+<div class="flex justify-center gap-8 mb-8">
+<a class="text-slate-400 hover:text-primary transition-colors" href="#">Privacy</a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#">Terms</a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#">Twitter</a>
+<a class="text-slate-400 hover:text-primary transition-colors" href="#">Changelog</a>
+</div>
+<p class="text-slate-400 text-xs">© 2024 Idea Lab. Crafted with care for the creators of tomorrow.</p>
+</footer>
+</main>
+</body></html>

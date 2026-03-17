@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx next:*)",
+      "Bash(npx shadcn@latest init -d --base-color neutral)",
+      "Bash(npx shadcn@latest init -d)"
+    ]
+  }
+}

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Idea Lab - Cloud Canvas</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&amp;family=Quicksand:wght@500;700&amp;family=Spline+Sans:wght@300;400;500;600;700&amp;family=Varela+Round&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#136aec",
+                        "primary-soft": "#9CB6DD",
+                        "background-light": "#FDFCF8", // Warm Cream from PRD
+                        "background-dark": "#101722",
+                        "surface": "#FFFFFF",
+                        "text-main": "#4A4A57",
+                        "text-muted": "#9898A6",
+                        "pastel-peach": "#FFB7B2",
+                        "pastel-mint": "#B5EAD7",
+                        "pastel-lime": "#E2F0CB",
+                    },
+                    fontFamily: {
+                        "display": ["Varela Round", "Spline Sans", "sans-serif"],
+                        "body": ["Nunito", "Spline Sans", "sans-serif"],
+                        "labels": ["Quicksand", "sans-serif"],
+                    },
+                    boxShadow: {
+                        'marshmallow': '8px 8px 16px rgba(210, 205, 194, 0.5), -8px -8px 16px #FFFFFF',
+                        'marshmallow-hover': '12px 12px 24px rgba(210, 205, 194, 0.6), -12px -12px 24px #FFFFFF',
+                        'marshmallow-inset': 'inset 6px 6px 12px rgba(210, 205, 194, 0.4), inset -6px -6px 12px #FFFFFF',
+                        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
+                    },
+                    animation: {
+                        'float-slow': 'float 6s ease-in-out infinite',
+                        'float-medium': 'float 5s ease-in-out infinite',
+                        'float-fast': 'float 4s ease-in-out infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-15px)' },
+                        }
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #E6E1D6; 
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #d1ccc0; 
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .bg-grid-pattern {
+            background-image: radial-gradient(#E6E1D6 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        
+        .floating-bubble {
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        .floating-bubble:hover {
+            transform: scale(1.05) translateY(-5px);
+            box-shadow: 12px 12px 24px rgba(210, 205, 194, 0.6), -12px -12px 24px #FFFFFF;
+            z-index: 10;
+        }
+
+        .floating-bubble:active {
+            transform: scale(0.95);
+            box-shadow: inset 4px 4px 8px rgba(210, 205, 194, 0.4), inset -4px -4px 8px #FFFFFF;
+        }
+    </style>
+</head>
+<body class="bg-background-light text-text-main font-body antialiased overflow-hidden h-screen selection:bg-pastel-mint selection:text-text-main">
+<!-- Main Container -->
+<div class="relative flex h-full w-full flex-col">
+<!-- Background Decor -->
+<div class="absolute inset-0 z-0 bg-grid-pattern opacity-40 pointer-events-none"></div>
+<div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-pastel-mint/20 rounded-full blur-[120px] pointer-events-none"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-pastel-peach/20 rounded-full blur-[120px] pointer-events-none"></div>
+<!-- Header -->
+<header class="relative z-50 flex items-center justify-between px-10 py-6">
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center size-10 rounded-xl bg-primary text-white shadow-marshmallow">
+<span class="material-symbols-outlined text-2xl">cloud</span>
+</div>
+<h1 class="text-text-main text-2xl font-display font-bold tracking-tight">Idea Lab</h1>
+</div>
+<!-- Collection Pill -->
+<button class="group relative flex items-center gap-3 bg-surface rounded-full px-5 py-2.5 shadow-marshmallow transition-all hover:shadow-marshmallow-hover active:scale-95">
+<span class="text-sm font-bold text-text-main font-labels">My Collection</span>
+<div class="flex items-center justify-center size-6 rounded-full bg-primary text-white text-xs font-bold transition-transform group-hover:scale-110">
+                    2
+                </div>
+</button>
+</header>
+<!-- Main Canvas Area -->
+<main class="relative z-10 flex-1 w-full overflow-hidden flex flex-col items-center">
+<!-- Search Bar (Fixed Position) -->
+<div class="w-full max-w-2xl px-6 mb-4 relative z-40 mt-12">
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-6 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-text-muted group-focus-within:text-primary transition-colors">search</span>
+</div>
+<input class="block w-full pl-14 pr-6 py-5 rounded-full bg-background-light shadow-marshmallow-inset border-none focus:ring-2 focus:ring-primary/20 text-lg font-display placeholder-text-muted/70 text-text-main transition-all" placeholder="What are you dreaming of? (e.g. 'SaaS', 'Robots', 'Coffee')..." type="text"/>
+</div>
+<p class="text-center mt-3 text-sm text-text-muted font-labels">Start typing or grab a cloud below</p>
+</div>
+<!-- Floating Bubbles Container -->
+<div class="flex-1 w-full relative overflow-y-auto overflow-x-hidden p-10 pb-40 scroll-smooth"><div class="max-w-6xl mx-auto w-full px-6 py-12 pb-44 space-y-16">
+<!-- Category 1: Tech & Innovation -->
+<section class="space-y-6">
+<div class="flex items-center gap-4 px-2">
+<div class="h-px flex-1 bg-gradient-to-r from-transparent via-pastel-mint to-transparent opacity-30"></div>
+<h2 class="text-xs font-bold uppercase tracking-[0.2em] text-text-muted/60 font-labels">Tech &amp; Innovation</h2>
+<div class="h-px flex-1 bg-gradient-to-r from-pastel-mint via-transparent to-transparent opacity-30"></div>
+</div>
+<div class="flex flex-wrap justify-center gap-4">
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-pastel-mint"></span>
+<span class="text-base font-display font-semibold text-text-main">Artificial Intelligence</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button>
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-pastel-mint"></span>
+<span class="text-base font-display font-semibold text-text-main">No-Code</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button>
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-pastel-mint"></span>
+<span class="text-base font-display font-semibold text-text-main">EdTech</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button>
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-pastel-mint"></span>
+<span class="text-base font-display font-semibold text-text-main">SaaS</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button>
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-pastel-mint"></span>
+<span class="text-base font-display font-semibold text-text-main">Fintech</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button>
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-pastel-mint"></span>
+<span class="text-base font-display font-semibold text-text-main">Cybersecurity</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button>
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-pastel-mint"></span>
+<span class="text-base font-display font-semibold text-text-main">CleanTech</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button>
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-pastel-mint"></span>
+<span class="text-base font-display font-semibold text-text-main">Web3</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button></div>
+</section>
+<!-- Category 2: Industries & Markets -->
+<section class="space-y-6">
+<div class="flex items-center gap-4 px-2">
+<div class="h-px flex-1 bg-gradient-to-r from-transparent via-pastel-peach to-transparent opacity-30"></div>
+<h2 class="text-xs font-bold uppercase tracking-[0.2em] text-text-muted/60 font-labels">Industries &amp; Markets</h2>
+<div class="h-px flex-1 bg-gradient-to-r from-pastel-peach via-transparent to-transparent opacity-30"></div>
+</div>
+<div class="flex flex-wrap justify-center gap-4">
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-pastel-peach"></span>
+<span class="text-base font-display font-semibold text-text-main">Marketplace</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button>
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-pastel-peach"></span>
+<span class="text-base font-display font-semibold text-text-main">Pet Care</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button>
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-pastel-peach"></span>
+<span class="text-base font-display font-semibold text-text-main">Subscription Box</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button>
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-pastel-peach"></span>
+<span class="text-base font-display font-semibold text-text-main">Sustainability</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button>
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-pastel-peach"></span>
+<span class="text-base font-display font-semibold text-text-main">E-commerce</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button>
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-pastel-peach"></span>
+<span class="text-base font-display font-semibold text-text-main">Logistics</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button>
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-pastel-peach"></span>
+<span class="text-base font-display font-semibold text-text-main">Real Estate</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button>
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-pastel-peach"></span>
+<span class="text-base font-display font-semibold text-text-main">Direct-to-Consumer</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button></div>
+</section>
+<!-- Category 3: Lifestyle & Future -->
+<section class="space-y-6">
+<div class="flex items-center gap-4 px-2">
+<div class="h-px flex-1 bg-gradient-to-r from-transparent via-primary-soft to-transparent opacity-30"></div>
+<h2 class="text-xs font-bold uppercase tracking-[0.2em] text-text-muted/60 font-labels">Lifestyle &amp; Future</h2>
+<div class="h-px flex-1 bg-gradient-to-r from-primary-soft via-transparent to-transparent opacity-30"></div>
+</div>
+<div class="flex flex-wrap justify-center gap-4">
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-primary/30"></span>
+<span class="text-base font-display font-semibold text-text-main">Wellness</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button>
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-primary/30"></span>
+<span class="text-base font-display font-semibold text-text-main">Remote Work</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button>
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-primary/30"></span>
+<span class="text-base font-display font-semibold text-text-main">Urban Farming</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button>
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-primary/30"></span>
+<span class="text-base font-display font-semibold text-text-main">Digital Nomad</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button>
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-primary/30"></span>
+<span class="text-base font-display font-semibold text-text-main">Mindfulness</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button>
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-primary/30"></span>
+<span class="text-base font-display font-semibold text-text-main">Biohacking</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button>
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-primary/30"></span>
+<span class="text-base font-display font-semibold text-text-main">Space Travel</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button>
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-primary/30"></span>
+<span class="text-base font-display font-semibold text-text-main">Smart Home</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button></div>
+</section><section class="space-y-6">
+<div class="flex items-center gap-4 px-2">
+<div class="h-px flex-1 bg-gradient-to-r from-transparent via-purple-300 to-transparent opacity-30"></div>
+<h2 class="text-xs font-bold uppercase tracking-[0.2em] text-text-muted/60 font-labels">Community &amp; Culture</h2>
+<div class="h-px flex-1 bg-gradient-to-r from-purple-300 via-transparent to-transparent opacity-30"></div>
+</div>
+<div class="flex flex-wrap justify-center gap-4">
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-purple-200"></span>
+<span class="text-base font-display font-semibold text-text-main">Social Impact</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button>
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-purple-200"></span>
+<span class="text-base font-display font-semibold text-text-main">Arts &amp; Design</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button>
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-purple-200"></span>
+<span class="text-base font-display font-semibold text-text-main">Localism</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button>
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-purple-200"></span>
+<span class="text-base font-display font-semibold text-text-main">Diversity</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button>
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-purple-200"></span>
+<span class="text-base font-display font-semibold text-text-main">Volunteering</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button>
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-purple-200"></span>
+<span class="text-base font-display font-semibold text-text-main">Mental Health</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button>
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-purple-200"></span>
+<span class="text-base font-display font-semibold text-text-main">Storytelling</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button>
+<button class="floating-bubble bg-surface px-8 py-3.5 rounded-full shadow-marshmallow flex items-center gap-3 group border border-white/60">
+<span class="size-2.5 rounded-full bg-purple-200"></span>
+<span class="text-base font-display font-semibold text-text-main">Gaming Culture</span>
+<span class="material-symbols-outlined text-text-muted opacity-0 group-hover:opacity-100 transition-all text-sm">add</span>
+</button>
+</div>
+</section>
+</div></div>
+</main>
+<!-- Bottom Tray (Glassmorphism Dock) -->
+<div class="fixed bottom-0 left-0 right-0 z-50 flex justify-center p-6 pointer-events-none">
+<div class="glass-panel w-full max-w-4xl rounded-3xl p-4 shadow-glass pointer-events-auto flex items-center justify-between gap-6 transition-all duration-500 ease-out transform translate-y-2 hover:translate-y-0">
+<!-- Tray Content Area -->
+<div class="flex-1 flex items-center gap-3 overflow-x-auto px-2 py-2 no-scrollbar">
+<!-- Collected Item 1 -->
+<div class="shrink-0 flex items-center gap-2 bg-pastel-peach/30 border border-pastel-peach/50 px-4 py-2 rounded-full">
+<span class="text-sm font-bold text-text-main font-display">Coffee</span>
+<button class="flex items-center justify-center size-5 rounded-full hover:bg-black/5 text-text-main/50 hover:text-text-main transition-colors">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+<!-- Collected Item 2 -->
+<div class="shrink-0 flex items-center gap-2 bg-pastel-lime/30 border border-pastel-lime/50 px-4 py-2 rounded-full">
+<span class="text-sm font-bold text-text-main font-display">SaaS</span>
+<button class="flex items-center justify-center size-5 rounded-full hover:bg-black/5 text-text-main/50 hover:text-text-main transition-colors">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+<!-- Placeholder State -->
+<div class="h-8 border-2 border-dashed border-text-muted/20 rounded-full flex items-center px-4">
+<span class="text-xs font-bold text-text-muted/60 uppercase tracking-wider font-labels">Drop ideas here</span>
+</div>
+</div>
+<!-- Action Button -->
+<div class="shrink-0 pl-4 border-l border-black/5">
+<button class="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white font-bold py-3 px-6 rounded-full shadow-marshmallow transition-all active:scale-95 active:shadow-none">
+<span class="material-symbols-outlined">auto_awesome</span>
+<span>Mix Ideas</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</body></html>
