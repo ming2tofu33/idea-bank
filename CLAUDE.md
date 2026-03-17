@@ -48,7 +48,12 @@
 ## Directory
 
 ```
-src/           → Next.js 앱 (App Router). 프론트엔드 + API Routes.
+src/
+  app/         → 라우팅 (페이지 + API Routes 핸들러)
+  server/      → 서버 전용 (firebase, openai, prompts, validators)
+  components/  → 프론트엔드 컴포넌트
+  types/       → 공유 타입 (서버+클라이언트)
+  lib/         → 공유 유틸 (utils 등)
 vault_ib/      → 프로젝트 지식 베이스 (Obsidian vault). 스펙/설계/계획.
 docs/          → 원본 스펙 (레거시, 읽기 전용)
 ```
