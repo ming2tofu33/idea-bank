@@ -1,13 +1,10 @@
 import type { Metadata } from "next";
-import { Spline_Sans, Geist } from "next/font/google";
+import { Spline_Sans } from "next/font/google";
 import "./globals.css";
-import { cn } from "@/lib/utils";
-
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const splineSans = Spline_Sans({
   subsets: ["latin"],
-  variable: "--font-spline-sans",
+  variable: "--font-sans",
   display: "swap",
 });
 
@@ -23,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" className={cn("font-sans", geist.variable)}>
+    <html lang="ko" className={splineSans.variable}>
       <body className="font-sans antialiased">{children}</body>
     </html>
   );
