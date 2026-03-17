@@ -14,13 +14,14 @@ export async function GET(request: NextRequest) {
     if (category) {
       query = query.where("category", "==", category);
     }
-    query = query.orderBy("category").orderBy("keyword");
 
     const snapshot = await query.get();
-    const keywords = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    const keywords = snapshot.docs
+      .map((doc) => ({ id: doc.id, ...doc.data() }))
+      .sort((a: Record<string, unknown>, b: Record<string, unknown>) =>
+        String(a.category).localeCompare(String(b.category)) ||
+        String(a.keyword).localeCompare(String(b.keyword)),
+      );
 
     return NextResponse.json({ keywords });
   } catch (error) {
