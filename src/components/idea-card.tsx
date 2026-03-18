@@ -42,7 +42,7 @@ export function IdeaCard({ idea, onBookmarkToggle, compact }: IdeaCardProps) {
     <div
       onClick={handleClick}
       className={cn(
-        "bg-surface rounded-card-lg shadow-marshmallow border border-white/80 cursor-pointer transition-all duration-300 hover:shadow-marshmallow-hover hover:-translate-y-0.5",
+        "bg-card text-card-foreground rounded-card-lg shadow-marshmallow border border-border cursor-pointer transition-all duration-300 hover:shadow-marshmallow-hover hover:-translate-y-0.5",
         compact ? "p-4" : "p-6",
       )}
     >
@@ -56,7 +56,7 @@ export function IdeaCard({ idea, onBookmarkToggle, compact }: IdeaCardProps) {
           )}
           <h3
             className={cn(
-              "font-bold text-text-main truncate",
+              "font-bold text-foreground truncate",
               compact ? "text-sm" : "text-lg",
             )}
           >
@@ -64,7 +64,7 @@ export function IdeaCard({ idea, onBookmarkToggle, compact }: IdeaCardProps) {
           </h3>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-1 shrink-0">
           {idea.total_score != null && (
             <span
               className={cn(
@@ -86,7 +86,7 @@ export function IdeaCard({ idea, onBookmarkToggle, compact }: IdeaCardProps) {
             onClick={handleBookmark}
             aria-label={idea.bookmarked ? "북마크 해제" : "북마크"}
             aria-pressed={idea.bookmarked}
-            className="min-w-10 min-h-10 flex items-center justify-center text-text-muted hover:text-primary transition-colors rounded-full hover:bg-muted/50"
+            className="min-w-10 min-h-10 flex items-center justify-center text-muted-foreground hover:text-primary transition-colors rounded-full hover:bg-muted/50"
           >
             {idea.bookmarked ? (
               <BookmarkCheck className="size-5 text-primary fill-primary/20" />
@@ -100,7 +100,7 @@ export function IdeaCard({ idea, onBookmarkToggle, compact }: IdeaCardProps) {
       {/* Summary */}
       <p
         className={cn(
-          "text-text-muted mt-2",
+          "text-muted-foreground mt-2",
           compact ? "text-xs line-clamp-2" : "text-sm line-clamp-3",
         )}
       >
@@ -120,7 +120,7 @@ export function IdeaCard({ idea, onBookmarkToggle, compact }: IdeaCardProps) {
       {!compact && (
         <div className="mt-4 flex flex-wrap items-center gap-2">
           {idea.target_user && (
-            <span className="text-xs text-text-muted bg-muted rounded-full px-2.5 py-1">
+            <span className="text-xs text-muted-foreground bg-muted rounded-full px-2.5 py-1">
               {idea.target_user}
             </span>
           )}

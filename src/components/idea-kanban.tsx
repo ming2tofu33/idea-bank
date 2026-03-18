@@ -23,20 +23,20 @@ export function IdeaKanban({
   onBookmarkToggle,
 }: IdeaKanbanProps) {
   return (
-    <div className="flex gap-4 overflow-x-auto pb-4 md:grid md:grid-cols-3 lg:grid-cols-6">
+    <div className="flex gap-3 overflow-x-auto pb-4 md:grid md:grid-cols-3 lg:grid-cols-6">
       {STATUS_COLUMNS.map((status) => {
         const columnIdeas = ideas.filter((i) => i.status === status);
         return (
           <div
             key={status}
-            className="min-w-[180px] bg-muted/30 rounded-card p-3"
+            className="min-w-[200px] flex-1 bg-muted/30 rounded-card-lg p-3 border border-border/50"
           >
             {/* Column header */}
             <div className="flex items-center justify-between mb-3 px-1">
-              <h3 className="text-xs font-bold text-text-muted uppercase tracking-wide">
+              <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wide">
                 {STATUS_LABELS[status]}
               </h3>
-              <span className="flex size-5 items-center justify-center rounded-full bg-muted text-[10px] font-bold text-text-muted">
+              <span className="flex size-5 items-center justify-center rounded-full bg-muted text-[10px] font-bold text-muted-foreground">
                 {columnIdeas.length}
               </span>
             </div>
@@ -57,7 +57,7 @@ export function IdeaKanban({
                       onStatusChange(idea.id, v as IdeaStatus)
                     }
                   >
-                    <SelectTrigger className="h-6 text-[10px] bg-transparent border-none shadow-none px-1">
+                    <SelectTrigger className="h-7 text-xs bg-transparent border-none shadow-none px-2 text-muted-foreground hover:text-foreground">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -71,7 +71,7 @@ export function IdeaKanban({
                 </div>
               ))}
               {columnIdeas.length === 0 && (
-                <div className="text-center py-8 text-text-muted">
+                <div className="text-center py-8 text-muted-foreground">
                   <div className="size-8 rounded-full bg-muted/50 mx-auto mb-2 flex items-center justify-center">
                     <span className="text-xs">—</span>
                   </div>

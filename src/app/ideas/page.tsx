@@ -37,13 +37,13 @@ export default function IdeasPage() {
   const ideas = data?.ideas ?? [];
 
   return (
-    <div>
+    <div className="w-full">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-text-main">아이디어</h1>
-          <p className="text-text-muted mt-1">
-            {ideas.length}개의 아이디어
+          <h1 className="text-3xl font-bold text-foreground">아이디어</h1>
+          <p className="text-muted-foreground mt-1">
+            {loading ? "불러오는 중..." : `${ideas.length}개의 아이디어`}
           </p>
         </div>
 
@@ -53,6 +53,7 @@ export default function IdeasPage() {
             variant={viewMode === "kanban" ? "secondary" : "ghost"}
             size="icon-sm"
             onClick={() => setViewMode("kanban")}
+            aria-label="칸반 보기"
           >
             <LayoutGrid className="size-4" />
           </Button>
@@ -60,6 +61,7 @@ export default function IdeasPage() {
             variant={viewMode === "list" ? "secondary" : "ghost"}
             size="icon-sm"
             onClick={() => setViewMode("list")}
+            aria-label="리스트 보기"
           >
             <List className="size-4" />
           </Button>
