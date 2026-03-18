@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Spline_Sans } from "next/font/google";
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { AppSidebar } from "@/components/app-sidebar";
+import { SessionProvider } from "next-auth/react";
+import { AuthLayout } from "@/components/auth-layout";
 import "./globals.css";
 
 const splineSans = Spline_Sans({
@@ -25,16 +24,9 @@ export default function RootLayout({
   return (
     <html lang="ko" className={splineSans.variable}>
       <body className="font-sans antialiased">
-        <TooltipProvider>
-          <SidebarProvider>
-            <AppSidebar />
-            <SidebarInset>
-              <main className="flex-1 px-4 py-6 sm:px-6 md:px-10 md:py-8 bg-background min-h-screen max-w-7xl mx-auto">
-                {children}
-              </main>
-            </SidebarInset>
-          </SidebarProvider>
-        </TooltipProvider>
+        <SessionProvider>
+          <AuthLayout>{children}</AuthLayout>
+        </SessionProvider>
       </body>
     </html>
   );
