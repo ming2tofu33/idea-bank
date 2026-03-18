@@ -23,14 +23,14 @@ export function IdeaKanban({
   onBookmarkToggle,
 }: IdeaKanbanProps) {
   return (
-    <div className="-mx-4 sm:-mx-6 md:-mx-10">
-      <div className="flex gap-3 overflow-x-auto px-4 sm:px-6 md:px-10 pb-4">
+    <div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pb-4">
         {STATUS_COLUMNS.map((status) => {
           const columnIdeas = ideas.filter((i) => i.status === status);
           return (
             <div
               key={status}
-              className="min-w-[220px] w-[220px] shrink-0 bg-muted/30 rounded-card-lg p-3 border border-border/50"
+              className="bg-muted/30 rounded-card-lg p-3 border border-border/50"
             >
               {/* Column header */}
               <div className="flex items-center justify-between mb-3 px-1">
@@ -83,8 +83,6 @@ export function IdeaKanban({
             </div>
           );
         })}
-        {/* End spacer for scroll padding */}
-        <div className="shrink-0 w-px" aria-hidden />
       </div>
     </div>
   );
