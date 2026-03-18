@@ -1,17 +1,31 @@
 "use client";
 
-import { Suspense, useState, useEffect, useRef } from "react";
+import { Suspense, useState, useEffect, useRef, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import { KeywordPicker } from "@/components/keyword-picker";
 import { KeywordDock } from "@/components/keyword-dock";
 import { SerendipityCard } from "@/components/serendipity-card";
 import { IdeaCard } from "@/components/idea-card";
 import { generateIdeas, patchIdea, fetchKeywords } from "@/lib/api";
-import { Sparkles, RotateCcw, AlertCircle } from "lucide-react";
+import { Sparkles, RotateCcw, AlertCircle, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Keyword, GenerationMode, IdeaGenerated } from "@/types";
 
 type GenerateStep = "pick" | "loading" | "results";
+
+const SESSION_KEY = "ideabank_last_session";
+
+interface GeneratedIdea extends IdeaGenerated {
+  id: string;
+  bookmarked: boolean;
+}
+
+interface SavedSession {
+  ideas: GeneratedIdea[];
+  keywords: Keyword[];
+  mode: GenerationMode;
+  timestamp: number;
+}
 
 export default function GeneratePageWrapper() {
   return (
@@ -19,11 +33,6 @@ export default function GeneratePageWrapper() {
       <GeneratePage />
     </Suspense>
   );
-}
-
-interface GeneratedIdea extends IdeaGenerated {
-  id: string;
-  bookmarked: boolean;
 }
 
 function GeneratePage() {
@@ -35,7 +44,52 @@ function GeneratePage() {
   const [generatedIdeas, setGeneratedIdeas] = useState<GeneratedIdea[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [elapsed, setElapsed] = useState(0);
+  const [lastSession, setLastSession] = useState<SavedSession | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // sessionStorage에서 이전 결과 복원
+  useEffect(() => {
+    try {
+      const saved = sessionStorage.getItem(SESSION_KEY);
+      if (saved) {
+        const session: SavedSession = JSON.parse(saved);
+        // 1시간 이내 세션만 복원
+        if (Date.now() - session.timestamp < 60 * 60 * 1000) {
+          setLastSession(session);
+        }
+      }
+    } catch {
+      // sessionStorage 접근 실패 무시
+    }
+  }, []);
+
+  // 결과를 sessionStorage에 저장
+  const saveSession = useCallback(
+    (ideas: GeneratedIdea[], keywords: Keyword[], mode: GenerationMode) => {
+      const session: SavedSession = {
+        ideas,
+        keywords,
+        mode,
+        timestamp: Date.now(),
+      };
+      try {
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
+        setLastSession(session);
+      } catch {
+        // 저장 실패 무시
+      }
+    },
+    [],
+  );
+
+  // 이전 세션 결과 복원
+  const restoreSession = () => {
+    if (!lastSession) return;
+    setGeneratedIdeas(lastSession.ideas);
+    setSelectedKeywords(lastSession.keywords);
+    setSelectedMode(lastSession.mode);
+    setStep("results");
+  };
 
   // 타이머: loading 시작 시 1초마다 카운트
   useEffect(() => {
@@ -97,6 +151,7 @@ function GeneratePage() {
         bookmarked: false,
       }));
       setGeneratedIdeas(ideasWithState);
+      saveSession(ideasWithState, selectedKeywords, selectedMode);
       setStep("results");
     } catch (err) {
       setError(
@@ -109,11 +164,14 @@ function GeneratePage() {
   const handleBookmarkToggle = async (id: string, bookmarked: boolean) => {
     try {
       await patchIdea(id, { bookmarked });
-      setGeneratedIdeas((prev) =>
-        prev.map((idea) =>
+      setGeneratedIdeas((prev) => {
+        const updated = prev.map((idea) =>
           idea.id === id ? { ...idea, bookmarked } : idea,
-        ),
-      );
+        );
+        // 북마크 변경도 세션에 반영
+        saveSession(updated, selectedKeywords, selectedMode);
+        return updated;
+      });
     } catch {
       // Silently fail — user can retry
     }
@@ -147,6 +205,33 @@ function GeneratePage() {
       {/* Step: PICK */}
       {step === "pick" && (
         <>
+          {/* 이전 세션 결과 복원 배너 */}
+          {lastSession && (
+            <div className="mb-6 bg-surface rounded-card-lg shadow-marshmallow border border-white/80 p-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <History className="size-5 text-primary" />
+                <div>
+                  <span className="text-sm font-semibold text-text-main">
+                    이전 결과 ({lastSession.ideas.length}개 아이디어)
+                  </span>
+                  <div className="flex gap-1.5 mt-1">
+                    {lastSession.keywords.map((kw) => (
+                      <span
+                        key={kw.id}
+                        className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-medium text-text-muted"
+                      >
+                        {kw.keyword}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <Button variant="outline" size="sm" onClick={restoreSession}>
+                결과 보기
+              </Button>
+            </div>
+          )}
+
           {/* Serendipity recommendations */}
           <div className="mb-8">
             <SerendipityCard onSelect={handleSerendipitySelect} />
@@ -186,7 +271,7 @@ function GeneratePage() {
       {step === "results" && (
         <>
           <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 flex-wrap">
               <h2 className="text-xl font-bold text-text-main">
                 {generatedIdeas.length}개 아이디어 생성 완료
               </h2>
