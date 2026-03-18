@@ -106,9 +106,12 @@ export default function DashboardPage() {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold text-text-main">최근 북마크</h2>
           {bookmarked.length > 0 && (
-            <Button variant="ghost" size="sm" render={<Link href="/ideas" />}>
+            <Link
+              href="/ideas"
+              className="text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
+            >
               전체 보기
-            </Button>
+            </Link>
           )}
         </div>
 
