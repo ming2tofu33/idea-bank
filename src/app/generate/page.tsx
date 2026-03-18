@@ -53,9 +53,13 @@ function GeneratePage() {
       const saved = sessionStorage.getItem(SESSION_KEY);
       if (saved) {
         const session: SavedSession = JSON.parse(saved);
-        // 1시간 이내 세션만 복원
+        // 1시간 이내 세션 → 바로 결과 복원
         if (Date.now() - session.timestamp < 60 * 60 * 1000) {
           setLastSession(session);
+          setGeneratedIdeas(session.ideas);
+          setSelectedKeywords(session.keywords);
+          setSelectedMode(session.mode);
+          setStep("results");
         }
       }
     } catch {
