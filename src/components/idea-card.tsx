@@ -70,10 +70,10 @@ export function IdeaCard({ idea, onBookmarkToggle, compact }: IdeaCardProps) {
               className={cn(
                 "rounded-full px-2 py-0.5 text-xs font-bold",
                 idea.total_score >= 80
-                  ? "bg-green-100 text-green-700"
+                  ? "bg-score-high-bg text-score-high-text"
                   : idea.total_score >= 60
-                    ? "bg-amber-100 text-amber-700"
-                    : "bg-red-100 text-red-700",
+                    ? "bg-score-mid-bg text-score-mid-text"
+                    : "bg-score-low-bg text-score-low-text",
               )}
             >
               {idea.total_score}점
@@ -84,7 +84,9 @@ export function IdeaCard({ idea, onBookmarkToggle, compact }: IdeaCardProps) {
           )}
           <button
             onClick={handleBookmark}
-            className="text-text-muted hover:text-primary transition-colors"
+            aria-label={idea.bookmarked ? "북마크 해제" : "북마크"}
+            aria-pressed={idea.bookmarked}
+            className="min-w-10 min-h-10 flex items-center justify-center text-text-muted hover:text-primary transition-colors rounded-full hover:bg-muted/50"
           >
             {idea.bookmarked ? (
               <BookmarkCheck className="size-5 text-primary fill-primary/20" />

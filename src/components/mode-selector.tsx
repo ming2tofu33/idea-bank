@@ -18,7 +18,7 @@ const MODE_ICONS: Record<GenerationMode, React.ElementType> = {
 
 export function ModeSelector({ value, onChange }: ModeSelectorProps) {
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2" role="radiogroup" aria-label="생성 모드 선택">
       {MODE_OPTIONS.map((option) => {
         const Icon = MODE_ICONS[option.value];
         const isSelected = value === option.value;
@@ -26,11 +26,13 @@ export function ModeSelector({ value, onChange }: ModeSelectorProps) {
           <button
             key={option.value}
             onClick={() => onChange(option.value)}
+            role="radio"
+            aria-checked={isSelected}
             className={cn(
-              "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition-all",
+              "flex items-center gap-1.5 rounded-full px-3 min-h-10 text-xs font-semibold transition-all cursor-pointer",
               isSelected
                 ? "bg-primary/10 text-primary border border-primary/30"
-                : "bg-surface text-text-muted border border-transparent hover:bg-muted",
+                : "bg-surface text-text-muted border border-transparent hover:bg-muted hover:shadow-sm",
             )}
             title={option.description}
           >

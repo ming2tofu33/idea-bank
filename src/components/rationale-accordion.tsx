@@ -26,7 +26,7 @@ export function RationaleAccordion({
 }: RationaleAccordionProps) {
   return (
     <details className="bg-surface rounded-card shadow-marshmallow border border-white/80 overflow-hidden group">
-      <summary className="flex items-center justify-between p-4 cursor-pointer hover:bg-muted/30 transition-colors">
+      <summary className="flex items-center justify-between p-4 cursor-pointer hover:bg-muted/50 transition-colors list-none [&::-webkit-details-marker]:hidden">
         <div className="flex items-center gap-3">
           <span className="text-sm font-bold text-text-main">
             {DIMENSION_LABELS[dimension] ?? dimension}
@@ -39,10 +39,10 @@ export function RationaleAccordion({
           className={cn(
             "rounded-full px-2.5 py-0.5 text-sm font-bold",
             score >= 80
-              ? "bg-green-100 text-green-700"
+              ? "bg-score-high-bg text-score-high-text"
               : score >= 60
-                ? "bg-amber-100 text-amber-700"
-                : "bg-red-100 text-red-700",
+                ? "bg-score-mid-bg text-score-mid-text"
+                : "bg-score-low-bg text-score-low-text",
           )}
         >
           {score}

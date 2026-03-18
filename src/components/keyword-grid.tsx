@@ -63,9 +63,10 @@ export function KeywordGrid({ keywords, onDelete, deleteLoading }: KeywordGridPr
                       <button
                         onClick={() => onDelete?.(keyword.id)}
                         disabled={isDeleting}
-                        className="flex size-5 items-center justify-center rounded-full hover:bg-destructive/10 text-text-muted hover:text-destructive transition-colors"
+                        aria-label={`${keyword.keyword} 삭제`}
+                        className="flex min-w-8 min-h-8 items-center justify-center rounded-full hover:bg-destructive/10 text-text-muted hover:text-destructive transition-colors"
                       >
-                        <Trash2 className="size-3" />
+                        <Trash2 className="size-3.5" />
                       </button>
                     ) : (
                       <Lock className="size-3 text-text-muted/30" />

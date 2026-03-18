@@ -56,10 +56,10 @@ export function IdeaList({
               idea.total_score == null
                 ? "text-text-muted"
                 : idea.total_score >= 80
-                  ? "text-green-600"
+                  ? "text-score-high-text"
                   : idea.total_score >= 60
-                    ? "text-amber-600"
-                    : "text-red-500",
+                    ? "text-score-mid-text"
+                    : "text-score-low-text",
             )}
           >
             {idea.total_score ?? "—"}

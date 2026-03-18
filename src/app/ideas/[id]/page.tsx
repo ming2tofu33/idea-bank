@@ -144,7 +144,12 @@ export default function IdeaDetailPage() {
               ))}
             </SelectContent>
           </Select>
-          <button onClick={handleBookmarkToggle} className="text-text-muted hover:text-primary">
+          <button
+            onClick={handleBookmarkToggle}
+            aria-label={idea.bookmarked ? "북마크 해제" : "북마크"}
+            aria-pressed={idea.bookmarked}
+            className="min-w-10 min-h-10 flex items-center justify-center rounded-full text-text-muted hover:text-primary hover:bg-muted/50 transition-colors"
+          >
             {idea.bookmarked ? (
               <BookmarkCheck className="size-5 text-primary fill-primary/20" />
             ) : (

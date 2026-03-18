@@ -54,9 +54,10 @@ export function KeywordDock({
                   </span>
                   <button
                     onClick={() => onRemove(kw)}
-                    className="flex size-4 items-center justify-center rounded-full hover:bg-black/5 text-text-main/50 hover:text-text-main transition-colors"
+                    aria-label={`${kw.keyword} 제거`}
+                    className="flex min-w-7 min-h-7 items-center justify-center rounded-full hover:bg-black/10 text-text-main/50 hover:text-text-main transition-colors"
                   >
-                    <X className="size-3" />
+                    <X className="size-3.5" />
                   </button>
                 </div>
               );

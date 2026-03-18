@@ -22,7 +22,7 @@ export function DeepReportView({ report, ideaTitle }: DeepReportViewProps) {
   return (
     <article className="paper-texture rounded-2xl shadow-marshmallow p-8 md:p-12 max-w-[800px] mx-auto relative overflow-hidden">
       {/* Header */}
-      <div className="mb-12 border-b border-gray-100 pb-6">
+      <div className="mb-12 border-b border-border pb-6">
         <span className="text-xs font-bold tracking-widest text-primary uppercase mb-2 block">
           Generated Blueprint
         </span>
@@ -42,7 +42,7 @@ export function DeepReportView({ report, ideaTitle }: DeepReportViewProps) {
 
       {/* 2. Problem */}
       <Section label="Problem" color="bg-accent-peach" rotate="rotate-1">
-        <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
+        <div className="bg-muted/50 p-4 rounded-xl border border-border">
           <div className="flex items-center gap-3 mb-2">
             <Lightbulb className="size-5 text-primary" />
             <h4 className="font-bold text-text-main text-sm">문제 정의</h4>
@@ -126,14 +126,14 @@ export function DeepReportView({ report, ideaTitle }: DeepReportViewProps) {
       {/* 8. Risks */}
       <Section label="Risks" color="bg-accent-purple" rotate="rotate-1">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
+          <div className="bg-muted/50 p-4 rounded-xl border border-border">
             <div className="flex items-center gap-2 mb-2">
               <AlertTriangle className="size-4 text-amber-500" />
               <span className="text-xs font-bold text-amber-700">기술 리스크</span>
             </div>
             <p className="text-sm text-text-muted">{report.risks.technical}</p>
           </div>
-          <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
+          <div className="bg-muted/50 p-4 rounded-xl border border-border">
             <div className="flex items-center gap-2 mb-2">
               <AlertTriangle className="size-4 text-red-500" />
               <span className="text-xs font-bold text-red-700">시장 리스크</span>
@@ -163,7 +163,7 @@ export function DeepReportView({ report, ideaTitle }: DeepReportViewProps) {
 
       {/* Footer */}
       <div className="mt-16 text-center">
-        <div className="inline-block w-24 h-1 bg-gray-100 rounded-full mb-4" />
+        <div className="inline-block w-24 h-1 bg-border rounded-full mb-4" />
         <p className="text-xs text-text-muted uppercase tracking-widest font-semibold">
           End of Blueprint
         </p>
