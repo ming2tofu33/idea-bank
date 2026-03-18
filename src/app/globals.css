@@ -3,6 +3,7 @@
 @import "shadcn/tailwind.css";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant pink (&:is(.pink *));
 
 /*
  * Marshmallow UI Design Tokens
@@ -52,38 +53,74 @@
   --sidebar-ring: #136aec;
 }
 
+/* ── Dark Theme: Cinematic deep dark with blue accent ── */
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  --background: #0a0a0f;
+  --foreground: #EDEDEF;
+  --card: #141418;
+  --card-foreground: #EDEDEF;
+  --popover: #141418;
+  --popover-foreground: #EDEDEF;
+  --primary: #5B8DEF;
+  --primary-foreground: #FFFFFF;
+  --secondary: #1e1e24;
+  --secondary-foreground: #EDEDEF;
+  --muted: #1e1e24;
+  --muted-foreground: #8A8F98;
+  --accent: #1e1e24;
+  --accent-foreground: #EDEDEF;
+  --destructive: #ef4444;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.1);
+  --ring: #5B8DEF;
   --chart-1: oklch(0.809 0.105 251.813);
   --chart-2: oklch(0.623 0.214 259.815);
   --chart-3: oklch(0.546 0.245 262.881);
   --chart-4: oklch(0.488 0.243 264.376);
   --chart-5: oklch(0.424 0.199 265.638);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar: #0e0e14;
+  --sidebar-foreground: #EDEDEF;
+  --sidebar-primary: #5B8DEF;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #1e1e24;
+  --sidebar-accent-foreground: #EDEDEF;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-ring: #5B8DEF;
+}
+
+/* ── Pink Theme: 0to1log.com inspired soft rose ── */
+.pink {
+  --background: #FFF0F3;
+  --foreground: #4A3040;
+  --card: #FFFFFF;
+  --card-foreground: #4A3040;
+  --popover: #FFFFFF;
+  --popover-foreground: #4A3040;
+  --primary: #E8458B;
+  --primary-foreground: #FFFFFF;
+  --secondary: #FFF5F7;
+  --secondary-foreground: #4A3040;
+  --muted: #FFF5F7;
+  --muted-foreground: #8B6B7B;
+  --accent: #FFF5F7;
+  --accent-foreground: #4A3040;
+  --destructive: #DC2626;
+  --border: #FCE4EC;
+  --input: #FCE4EC;
+  --ring: #E8458B;
+  --chart-1: oklch(0.809 0.105 351);
+  --chart-2: oklch(0.623 0.214 340);
+  --chart-3: oklch(0.546 0.245 330);
+  --chart-4: oklch(0.488 0.243 320);
+  --chart-5: oklch(0.424 0.199 310);
+  --sidebar: #FFF5F7;
+  --sidebar-foreground: #4A3040;
+  --sidebar-primary: #E8458B;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #FFE8EE;
+  --sidebar-accent-foreground: #4A3040;
+  --sidebar-border: #FCE4EC;
+  --sidebar-ring: #E8458B;
 }
 
 @theme inline {
@@ -182,6 +219,40 @@
   }
 }
 
+/* ── Dark theme: Marshmallow overrides ── */
+.dark {
+  --color-surface: #141418;
+  --color-text-main: #EDEDEF;
+  --color-text-muted: #8A8F98;
+  --color-primary-soft: #3d5a8a;
+  --shadow-marshmallow: 4px 4px 16px rgba(0, 0, 0, 0.6),
+    -4px -4px 16px rgba(255, 255, 255, 0.03);
+  --shadow-marshmallow-hover: 8px 8px 24px rgba(0, 0, 0, 0.7),
+    -8px -8px 24px rgba(255, 255, 255, 0.04);
+  --shadow-marshmallow-inset: inset 4px 4px 8px rgba(0, 0, 0, 0.5),
+    inset -4px -4px 8px rgba(255, 255, 255, 0.03);
+  --shadow-float: 0 20px 40px -10px rgba(91, 141, 239, 0.3);
+}
+
+/* ── Pink theme: Marshmallow overrides ── */
+.pink {
+  --color-surface: #FFFFFF;
+  --color-text-main: #4A3040;
+  --color-text-muted: #8B6B7B;
+  --color-primary-soft: #F9A8D4;
+  --color-accent-peach: #FFB7C5;
+  --color-accent-mint: #C8E6D5;
+  --color-accent-lime: #E8F0D8;
+  --color-accent-purple: #F0E0FF;
+  --shadow-marshmallow: 8px 8px 24px rgba(220, 180, 195, 0.4),
+    -8px -8px 24px #ffffff;
+  --shadow-marshmallow-hover: 12px 12px 32px rgba(220, 180, 195, 0.5),
+    -12px -12px 32px #ffffff;
+  --shadow-marshmallow-inset: inset 4px 4px 8px rgba(220, 180, 195, 0.3),
+    inset -4px -4px 8px #ffffff;
+  --shadow-float: 0 20px 40px -10px rgba(232, 69, 139, 0.2);
+}
+
 /* ── Marshmallow utility classes ── */
 
 .glass-panel {
@@ -189,6 +260,14 @@
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.8);
+}
+.dark .glass-panel {
+  background: rgba(20, 20, 24, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.pink .glass-panel {
+  background: rgba(255, 240, 243, 0.8);
+  border: 1px solid rgba(252, 228, 236, 0.8);
 }
 
 .floating-bubble {
@@ -211,8 +290,18 @@
 }
 
 .paper-texture {
-  background-color: #ffffff;
+  background-color: var(--card);
   background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z' fill='%239C92AC' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
+.dark .marker-highlight {
+  background: linear-gradient(120deg, rgba(91,141,239,0.15) 0%, rgba(91,141,239,0.1) 100%);
+  box-shadow: inset 0 -0.5em 0 rgba(91,141,239,0.2);
+  color: #93b4f5;
+}
+.pink .marker-highlight {
+  background: linear-gradient(120deg, #fff0f3 0%, #ffe0e8 100%);
+  box-shadow: inset 0 -0.5em 0 #ffb7c5;
+  color: #9d174d;
 }
 
 .no-scrollbar::-webkit-scrollbar {

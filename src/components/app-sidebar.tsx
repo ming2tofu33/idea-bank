@@ -12,6 +12,7 @@ import {
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
@@ -19,6 +20,7 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from "@/components/ui/sidebar";
+import { ThemeSwitcher } from "@/components/theme-switcher";
 
 const NAV_ITEMS = [
   { href: "/", label: "대시보드", icon: LayoutDashboard },
@@ -67,6 +69,10 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
+      <SidebarFooter className="p-4">
+        <ThemeSwitcher />
+      </SidebarFooter>
     </Sidebar>
   );
 }
