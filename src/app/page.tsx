@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useFetch } from "@/hooks/use-fetch";
-import { fetchIdeas } from "@/lib/api";
+import { fetchIdeas, fetchStats } from "@/lib/api";
 import { IdeaCard } from "@/components/idea-card";
 import { SerendipityCard } from "@/components/serendipity-card";
 import { patchIdea } from "@/lib/api";
@@ -15,12 +15,15 @@ import {
   BookmarkCheck,
   Eye,
   ArrowRight,
+  Archive,
+  DollarSign,
 } from "lucide-react";
 import type { Keyword } from "@/types";
 
 export default function DashboardPage() {
   const router = useRouter();
   const { data, loading, refetch } = useFetch(() => fetchIdeas());
+  const { data: stats } = useFetch(() => fetchStats());
 
   const handleSerendipitySelect = (keywords: Keyword[]) => {
     const ids = keywords.map((k) => k.id).join(",");
@@ -52,6 +55,23 @@ export default function DashboardPage() {
           오늘도 5분, 아이디어를 발산해보세요
         </p>
       </div>
+
+      {/* Stale Alert */}
+      {stats && stats.stale_archived_count > 0 && (
+        <div className="mb-6 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-card p-4 flex items-center gap-3">
+          <Archive className="size-5 text-amber-500 shrink-0" />
+          <span className="text-sm text-amber-800 dark:text-amber-200">
+            {stats.stale_archived_count}개 아이디어가 14일 이상 방치되어 자동
+            아카이브되었습니다.
+          </span>
+          <Link
+            href="/ideas"
+            className="ml-auto text-xs font-semibold text-amber-600 hover:text-amber-700 shrink-0"
+          >
+            확인하기
+          </Link>
+        </div>
+      )}
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
@@ -90,7 +110,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
         <StatCard
           icon={<Lightbulb className="size-5 text-primary" />}
           label="전체 아이디어"
@@ -105,6 +125,18 @@ export default function DashboardPage() {
           icon={<Eye className="size-5 text-teal-500" />}
           label="검토 중"
           value={loading ? "—" : String(reviewingCount)}
+        />
+        <StatCard
+          icon={<Archive className="size-5 text-muted-foreground" />}
+          label="방치 아카이브"
+          value={stats ? String(stats.stale_archived_count) : "—"}
+          warn={!!stats && stats.stale_archived_count > 0}
+        />
+        <StatCard
+          icon={<DollarSign className="size-5 text-green-500" />}
+          label="월간 비용"
+          value={stats ? `$${stats.monthly_cost_usd.toFixed(2)}` : "—"}
+          sub="/ $30"
         />
       </div>
 
@@ -161,18 +193,31 @@ function StatCard({
   icon,
   label,
   value,
+  sub,
+  warn,
 }: {
   icon: React.ReactNode;
   label: string;
   value: string;
+  sub?: string;
+  warn?: boolean;
 }) {
   return (
-    <div className="bg-card rounded-card-lg shadow-marshmallow p-5 border border-border">
+    <div
+      className={`bg-card rounded-card-lg shadow-marshmallow p-5 border ${
+        warn ? "border-amber-300 dark:border-amber-700" : "border-border"
+      }`}
+    >
       <div className="flex items-center gap-2 mb-2">
         {icon}
         <span className="text-xs font-bold text-muted-foreground">{label}</span>
       </div>
-      <span className="text-2xl font-black text-foreground">{value}</span>
+      <div className="flex items-baseline gap-1">
+        <span className="text-2xl font-black text-foreground">{value}</span>
+        {sub && (
+          <span className="text-xs text-muted-foreground">{sub}</span>
+        )}
+      </div>
     </div>
   );
 }
