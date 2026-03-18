@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { collections } from "@/server/firebase";
 import { errorResponse } from "@/lib/errors";
+import { getAuthUser } from "@/server/auth-guard";
 import { FieldValue } from "firebase-admin/firestore";
 import type { IdeaPatchInput } from "@/types";
 
@@ -10,10 +11,13 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const user = await getAuthUser();
+    if (user instanceof Response) return user;
+
     const { id } = await params;
     const doc = await collections.ideas.doc(id).get();
 
-    if (!doc.exists) {
+    if (!doc.exists || doc.data()?.user_id !== user.userId) {
       return errorResponse("NOT_FOUND", "Idea not found", 404);
     }
 
@@ -30,11 +34,14 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const user = await getAuthUser();
+    if (user instanceof Response) return user;
+
     const { id } = await params;
     const body: IdeaPatchInput = await request.json();
 
     const doc = await collections.ideas.doc(id).get();
-    if (!doc.exists) {
+    if (!doc.exists || doc.data()?.user_id !== user.userId) {
       return errorResponse("NOT_FOUND", "Idea not found", 404);
     }
 

@@ -4,12 +4,16 @@ import { callOpenAI, MODELS } from "@/server/openai";
 import { errorResponse, withRetry } from "@/lib/errors";
 import { buildGenerationPrompt } from "@/server/prompts/generation";
 import { validateGenerateResponse } from "@/server/validators/idea-response";
+import { getAuthUser } from "@/server/auth-guard";
 import { FieldValue } from "firebase-admin/firestore";
 import type { GenerateRequest, AIRunCreateInput } from "@/types";
 
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
   try {
+    const user = await getAuthUser();
+    if (user instanceof Response) return user;
+
     const body: GenerateRequest = await request.json();
 
     if (!body.keywords?.length || !body.mode) {
@@ -25,6 +29,7 @@ export async function POST(request: NextRequest) {
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
     const recentIdeas = await collections.ideas
+      .where("user_id", "==", user.userId)
       .where("created_at", ">=", thirtyDaysAgo)
       .get();
     const existingTitles = recentIdeas.docs.map(
@@ -86,6 +91,7 @@ export async function POST(request: NextRequest) {
     for (const idea of validation.data.ideas) {
       const docRef = await withRetry(() =>
         collections.ideas.add({
+          user_id: user.userId,
           title: idea.title,
           summary: idea.summary,
           keywords_used: body.keywords,
@@ -116,6 +122,7 @@ export async function POST(request: NextRequest) {
 
     // 7. Save session log
     const sessionRef = await collections.sessions.add({
+      user_id: user.userId,
       session_date: FieldValue.serverTimestamp(),
       session_type: "diverge",
       keywords_selected: body.keywords,

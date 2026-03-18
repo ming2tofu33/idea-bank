@@ -5,11 +5,15 @@ import { errorResponse, withRetry } from "@/lib/errors";
 import { buildReportPrompt } from "@/server/prompts/report";
 import { validateReportResponse } from "@/server/validators/report-response";
 import { searchForReport } from "@/server/tavily";
+import { getAuthUser } from "@/server/auth-guard";
 import { FieldValue } from "firebase-admin/firestore";
 import type { ReportRequest, AIRunCreateInput } from "@/types";
 
 export async function POST(request: NextRequest) {
   try {
+    const user = await getAuthUser();
+    if (user instanceof Response) return user;
+
     const body: ReportRequest = await request.json();
     if (!body.idea_id) {
       return errorResponse("BAD_REQUEST", "idea_id is required", 400);

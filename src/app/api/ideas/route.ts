@@ -1,19 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
 import { collections } from "@/server/firebase";
 import { errorResponse, withRetry } from "@/lib/errors";
+import { getAuthUser } from "@/server/auth-guard";
 import { FieldValue } from "firebase-admin/firestore";
 import type { IdeaCreateInput } from "@/types";
 
 // GET /api/ideas — list with filters, sorting, pagination
 export async function GET(request: NextRequest) {
   try {
+    const user = await getAuthUser();
+    if (user instanceof Response) return user;
+
     const { searchParams } = request.nextUrl;
     const status = searchParams.get("status");
     const bookmarked = searchParams.get("bookmarked");
-    const limit = parseInt(searchParams.get("limit") || "20", 10);
+    const limit = parseInt(searchParams.get("limit") || "50", 10);
     const offset = parseInt(searchParams.get("offset") || "0", 10);
 
-    let query: FirebaseFirestore.Query = collections.ideas;
+    let query: FirebaseFirestore.Query = collections.ideas.where(
+      "user_id",
+      "==",
+      user.userId,
+    );
 
     if (status) query = query.where("status", "==", status);
     if (bookmarked === "true") query = query.where("bookmarked", "==", true);
@@ -33,9 +41,12 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/ideas — save idea (called internally from generate API)
+// POST /api/ideas — save idea
 export async function POST(request: NextRequest) {
   try {
+    const user = await getAuthUser();
+    if (user instanceof Response) return user;
+
     const body: IdeaCreateInput = await request.json();
 
     if (!body.title?.trim()) {
@@ -45,6 +56,7 @@ export async function POST(request: NextRequest) {
     const docRef = await withRetry(() =>
       collections.ideas.add({
         ...body,
+        user_id: user.userId,
         title: body.title.trim(),
         summary: body.summary?.trim() || "",
         status: body.status || "new",

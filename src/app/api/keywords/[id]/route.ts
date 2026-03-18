@@ -1,13 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { collections } from "@/server/firebase";
 import { errorResponse } from "@/lib/errors";
+import { getAuthUser } from "@/server/auth-guard";
 
-// DELETE /api/keywords/[id] — delete custom keyword only
+// DELETE /api/keywords/[id] — delete custom keyword only (user-scoped)
 export async function DELETE(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const user = await getAuthUser();
+    if (user instanceof Response) return user;
+
     const { id } = await params;
     const doc = await collections.keywords.doc(id).get();
 
@@ -18,6 +22,10 @@ export async function DELETE(
     const data = doc.data();
     if (data?.source === "fixed") {
       return errorResponse("BAD_REQUEST", "Cannot delete fixed keywords", 400);
+    }
+
+    if (data?.user_id !== user.userId) {
+      return errorResponse("NOT_FOUND", "Keyword not found", 404);
     }
 
     await collections.keywords.doc(id).delete();

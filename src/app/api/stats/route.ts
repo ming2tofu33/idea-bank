@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { collections } from "@/server/firebase";
 import { checkStaleIdeas } from "@/server/stale-checker";
+import { getAuthUser } from "@/server/auth-guard";
 import type { StatsResponse } from "@/types";
 
 // Per 1K tokens pricing
@@ -10,10 +11,13 @@ const PRICING: Record<string, { input: number; output: number }> = {
 };
 
 export async function GET() {
-  // 1. Run stale check
-  const staleCount = await checkStaleIdeas();
+  const user = await getAuthUser();
+  if (user instanceof Response) return user;
 
-  // 2. Monthly cost from ai_runs
+  // 1. Run stale check (user-scoped)
+  const staleCount = await checkStaleIdeas(user.userId);
+
+  // 2. Monthly cost from ai_runs (global — cost is shared)
   const monthStart = new Date();
   monthStart.setDate(1);
   monthStart.setHours(0, 0, 0, 0);
@@ -33,11 +37,12 @@ export async function GET() {
     callCount++;
   });
 
-  // 3. Sessions this week
+  // 3. Sessions this week (user-scoped)
   const weekAgo = new Date();
   weekAgo.setDate(weekAgo.getDate() - 7);
 
   const sessions = await collections.sessions
+    .where("user_id", "==", user.userId)
     .where("session_date", ">=", weekAgo)
     .get();
 

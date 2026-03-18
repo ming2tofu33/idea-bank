@@ -4,11 +4,15 @@ import { callOpenAI, MODELS } from "@/server/openai";
 import { errorResponse, withRetry } from "@/lib/errors";
 import { buildEvaluationPrompt } from "@/server/prompts/evaluation";
 import { validateEvaluationResponse } from "@/server/validators/evaluation-response";
+import { getAuthUser } from "@/server/auth-guard";
 import { FieldValue } from "firebase-admin/firestore";
 import type { EvaluateRequest, AIRunCreateInput } from "@/types";
 
 export async function POST(request: NextRequest) {
   try {
+    const user = await getAuthUser();
+    if (user instanceof Response) return user;
+
     const body: EvaluateRequest = await request.json();
     if (!body.idea_id) {
       return errorResponse("BAD_REQUEST", "idea_id is required", 400);
