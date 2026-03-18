@@ -53,39 +53,39 @@
   --sidebar-ring: #136aec;
 }
 
-/* ── Dark Theme: Cinematic deep dark with blue accent ── */
+/* ── Midnight Theme: 0to1log.com inspired deep navy-black ── */
 .dark {
-  --background: #0a0a0f;
-  --foreground: #EDEDEF;
-  --card: #141418;
-  --card-foreground: #EDEDEF;
-  --popover: #141418;
-  --popover-foreground: #EDEDEF;
-  --primary: #5B8DEF;
+  --background: #08090E;
+  --foreground: #E8E9ED;
+  --card: #101118;
+  --card-foreground: #E8E9ED;
+  --popover: #101118;
+  --popover-foreground: #E8E9ED;
+  --primary: #6B8AFF;
   --primary-foreground: #FFFFFF;
-  --secondary: #1e1e24;
-  --secondary-foreground: #EDEDEF;
-  --muted: #1e1e24;
-  --muted-foreground: #8A8F98;
-  --accent: #1e1e24;
-  --accent-foreground: #EDEDEF;
+  --secondary: #181A24;
+  --secondary-foreground: #E8E9ED;
+  --muted: #181A24;
+  --muted-foreground: #7B7F8E;
+  --accent: #181A24;
+  --accent-foreground: #E8E9ED;
   --destructive: #ef4444;
-  --border: rgba(255, 255, 255, 0.08);
-  --input: rgba(255, 255, 255, 0.1);
-  --ring: #5B8DEF;
+  --border: rgba(200, 210, 255, 0.06);
+  --input: rgba(200, 210, 255, 0.08);
+  --ring: #6B8AFF;
   --chart-1: oklch(0.809 0.105 251.813);
   --chart-2: oklch(0.623 0.214 259.815);
   --chart-3: oklch(0.546 0.245 262.881);
   --chart-4: oklch(0.488 0.243 264.376);
   --chart-5: oklch(0.424 0.199 265.638);
-  --sidebar: #0e0e14;
-  --sidebar-foreground: #EDEDEF;
-  --sidebar-primary: #5B8DEF;
+  --sidebar: #0A0B11;
+  --sidebar-foreground: #E8E9ED;
+  --sidebar-primary: #6B8AFF;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #1e1e24;
-  --sidebar-accent-foreground: #EDEDEF;
-  --sidebar-border: rgba(255, 255, 255, 0.08);
-  --sidebar-ring: #5B8DEF;
+  --sidebar-accent: #181A24;
+  --sidebar-accent-foreground: #E8E9ED;
+  --sidebar-border: rgba(200, 210, 255, 0.06);
+  --sidebar-ring: #6B8AFF;
 }
 
 /* ── Pink Theme: 0to1log.com inspired soft rose ── */
@@ -219,19 +219,19 @@
   }
 }
 
-/* ── Dark theme: Marshmallow overrides ── */
+/* ── Midnight theme: Marshmallow overrides ── */
 .dark {
-  --color-surface: #141418;
-  --color-text-main: #EDEDEF;
-  --color-text-muted: #8A8F98;
-  --color-primary-soft: #3d5a8a;
-  --shadow-marshmallow: 4px 4px 16px rgba(0, 0, 0, 0.6),
-    -4px -4px 16px rgba(255, 255, 255, 0.03);
-  --shadow-marshmallow-hover: 8px 8px 24px rgba(0, 0, 0, 0.7),
-    -8px -8px 24px rgba(255, 255, 255, 0.04);
-  --shadow-marshmallow-inset: inset 4px 4px 8px rgba(0, 0, 0, 0.5),
-    inset -4px -4px 8px rgba(255, 255, 255, 0.03);
-  --shadow-float: 0 20px 40px -10px rgba(91, 141, 239, 0.3);
+  --color-surface: #101118;
+  --color-text-main: #E8E9ED;
+  --color-text-muted: #7B7F8E;
+  --color-primary-soft: #3d4f8a;
+  --shadow-marshmallow: 4px 4px 16px rgba(0, 0, 10, 0.7),
+    -4px -4px 16px rgba(100, 120, 255, 0.02);
+  --shadow-marshmallow-hover: 8px 8px 24px rgba(0, 0, 10, 0.8),
+    -8px -8px 24px rgba(100, 120, 255, 0.03);
+  --shadow-marshmallow-inset: inset 4px 4px 8px rgba(0, 0, 10, 0.6),
+    inset -4px -4px 8px rgba(100, 120, 255, 0.02);
+  --shadow-float: 0 20px 40px -10px rgba(107, 138, 255, 0.25);
 }
 
 /* ── Pink theme: Marshmallow overrides ── */
@@ -262,8 +262,8 @@
   border: 1px solid rgba(255, 255, 255, 0.8);
 }
 .dark .glass-panel {
-  background: rgba(20, 20, 24, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(16, 17, 24, 0.85);
+  border: 1px solid rgba(200, 210, 255, 0.06);
 }
 .pink .glass-panel {
   background: rgba(255, 240, 243, 0.8);
@@ -294,9 +294,9 @@
   background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z' fill='%239C92AC' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
 }
 .dark .marker-highlight {
-  background: linear-gradient(120deg, rgba(91,141,239,0.15) 0%, rgba(91,141,239,0.1) 100%);
-  box-shadow: inset 0 -0.5em 0 rgba(91,141,239,0.2);
-  color: #93b4f5;
+  background: linear-gradient(120deg, rgba(107,138,255,0.15) 0%, rgba(107,138,255,0.1) 100%);
+  box-shadow: inset 0 -0.5em 0 rgba(107,138,255,0.2);
+  color: #a0b8ff;
 }
 .pink .marker-highlight {
   background: linear-gradient(120deg, #fff0f3 0%, #ffe0e8 100%);
