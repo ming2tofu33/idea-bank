@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { KeywordPicker } from "@/components/keyword-picker";
 import { KeywordDock } from "@/components/keyword-dock";
@@ -26,6 +26,21 @@ export default function GeneratePage() {
     useState<GenerationMode>("full_match");
   const [generatedIdeas, setGeneratedIdeas] = useState<GeneratedIdea[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [elapsed, setElapsed] = useState(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // 타이머: loading 시작 시 1초마다 카운트
+  useEffect(() => {
+    if (step === "loading") {
+      setElapsed(0);
+      timerRef.current = setInterval(() => setElapsed((s) => s + 1), 1000);
+    } else {
+      if (timerRef.current) clearInterval(timerRef.current);
+    }
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [step]);
 
   // 대시보드에서 추천 조합 클릭 시 → 자동으로 키워드 채우기
   useEffect(() => {
@@ -152,7 +167,9 @@ export default function GeneratePage() {
             <h2 className="text-xl font-bold text-text-main mb-2">
               아이디어를 생성하고 있어요...
             </h2>
-            <p className="text-sm text-text-muted">약 10-15초 소요</p>
+            <p className="text-2xl font-black text-primary tabular-nums">
+              {elapsed}<span className="text-sm font-semibold text-text-muted">초</span>
+            </p>
           </div>
         </div>
       )}
