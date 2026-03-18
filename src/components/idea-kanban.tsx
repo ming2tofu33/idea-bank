@@ -71,8 +71,11 @@ export function IdeaKanban({
                 </div>
               ))}
               {columnIdeas.length === 0 && (
-                <div className="text-center py-6 text-text-muted/40 text-xs">
-                  비어 있음
+                <div className="text-center py-8 text-text-muted">
+                  <div className="size-8 rounded-full bg-muted/50 mx-auto mb-2 flex items-center justify-center">
+                    <span className="text-xs">—</span>
+                  </div>
+                  <span className="text-xs">비어 있음</span>
                 </div>
               )}
             </div>

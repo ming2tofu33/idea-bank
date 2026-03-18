@@ -32,8 +32,8 @@ export function KeywordDock({
         {/* Selected keywords */}
         <div className="flex-1 flex items-center gap-2 overflow-x-auto no-scrollbar px-1 py-1">
           {selectedKeywords.length === 0 ? (
-            <div className="h-9 border-2 border-dashed border-text-muted/20 rounded-full flex items-center px-4">
-              <span className="text-xs font-bold text-text-muted/60 uppercase tracking-wider">
+            <div className="h-9 border-2 border-dashed border-text-muted/30 rounded-full flex items-center px-4">
+              <span className="text-xs font-bold text-text-muted uppercase tracking-wider">
                 키워드를 선택하세요
               </span>
             </div>
@@ -71,7 +71,7 @@ export function KeywordDock({
           <Button
             onClick={onGenerate}
             disabled={!canGenerate}
-            className="rounded-full px-5 py-2.5 font-bold shadow-float"
+            className="rounded-full px-5 py-2.5 font-bold shadow-float hover:shadow-marshmallow-hover hover:-translate-y-0.5 transition-all"
             size="lg"
           >
             <Sparkles className="size-4" />

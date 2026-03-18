@@ -64,7 +64,7 @@ export function KeywordPicker({ selectedKeywords, onToggle }: KeywordPickerProps
                   backgroundImage: `linear-gradient(to right, transparent, ${getCategoryColor(category)}, transparent)`,
                 }}
               />
-              <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-text-muted/60">
+              <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-text-muted">
                 {CATEGORY_LABELS[category]}
               </h2>
               <div
