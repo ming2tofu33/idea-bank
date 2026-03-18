@@ -8,6 +8,7 @@ import { FieldValue } from "firebase-admin/firestore";
 import type { GenerateRequest, AIRunCreateInput } from "@/types";
 
 export async function POST(request: NextRequest) {
+  const startTime = Date.now();
   try {
     const body: GenerateRequest = await request.json();
 
@@ -113,9 +114,22 @@ export async function POST(request: NextRequest) {
       created_at: FieldValue.serverTimestamp(),
     });
 
+    // 7. Save session log
+    const sessionRef = await collections.sessions.add({
+      session_date: FieldValue.serverTimestamp(),
+      session_type: "diverge",
+      keywords_selected: body.keywords,
+      generation_mode: body.mode,
+      ideas_generated: savedIds.length,
+      ideas_bookmarked: [],
+      ideas_discarded: [],
+      session_duration: Math.round((Date.now() - startTime) / 1000),
+    });
+
     return NextResponse.json({
       ...validation.data,
       saved_ids: savedIds,
+      session_id: sessionRef.id,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";
