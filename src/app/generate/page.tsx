@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { Suspense, useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { KeywordPicker } from "@/components/keyword-picker";
 import { KeywordDock } from "@/components/keyword-dock";
@@ -13,12 +13,20 @@ import type { Keyword, GenerationMode, IdeaGenerated } from "@/types";
 
 type GenerateStep = "pick" | "loading" | "results";
 
+export default function GeneratePageWrapper() {
+  return (
+    <Suspense>
+      <GeneratePage />
+    </Suspense>
+  );
+}
+
 interface GeneratedIdea extends IdeaGenerated {
   id: string;
   bookmarked: boolean;
 }
 
-export default function GeneratePage() {
+function GeneratePage() {
   const searchParams = useSearchParams();
   const [step, setStep] = useState<GenerateStep>("pick");
   const [selectedKeywords, setSelectedKeywords] = useState<Keyword[]>([]);
