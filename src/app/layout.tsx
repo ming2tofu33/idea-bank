@@ -29,7 +29,7 @@ export default function RootLayout({
           <SidebarProvider>
             <AppSidebar />
             <SidebarInset>
-              <main className="flex-1 px-6 py-6 md:px-10 md:py-8 bg-background min-h-screen">
+              <main className="flex-1 px-4 py-6 sm:px-6 md:px-10 md:py-8 bg-background min-h-screen max-w-7xl mx-auto">
                 {children}
               </main>
             </SidebarInset>
