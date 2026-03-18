@@ -23,7 +23,7 @@ export function IdeaKanban({
   onBookmarkToggle,
 }: IdeaKanbanProps) {
   return (
-    <div className="grid grid-cols-6 gap-4 overflow-x-auto pb-4">
+    <div className="flex gap-4 overflow-x-auto pb-4 md:grid md:grid-cols-3 lg:grid-cols-6">
       {STATUS_COLUMNS.map((status) => {
         const columnIdeas = ideas.filter((i) => i.status === status);
         return (

@@ -66,7 +66,7 @@ export function KeywordDock({
         </div>
 
         {/* Mode + Generate */}
-        <div className="shrink-0 flex items-center gap-3 pl-3 border-l border-black/5">
+        <div className="shrink-0 flex flex-col sm:flex-row items-center gap-3 sm:pl-3 sm:border-l border-black/5 pt-3 sm:pt-0 border-t sm:border-t-0">
           <ModeSelector value={mode} onChange={onModeChange} />
           <Button
             onClick={onGenerate}

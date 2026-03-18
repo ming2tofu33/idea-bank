@@ -21,8 +21,8 @@ export function IdeaList({
 
   return (
     <div className="space-y-2">
-      {/* Header row */}
-      <div className="grid grid-cols-[1fr_100px_60px_80px_100px] gap-4 px-4 py-2 text-xs font-bold text-text-muted uppercase tracking-wide">
+      {/* Desktop: table header */}
+      <div className="hidden md:grid grid-cols-[1fr_100px_60px_80px_100px] gap-4 px-4 py-2 text-xs font-bold text-text-muted uppercase tracking-wide">
         <span>제목</span>
         <span>상태</span>
         <span>점수</span>
@@ -30,60 +30,101 @@ export function IdeaList({
         <span>생성일</span>
       </div>
 
-      {/* Rows */}
       {ideas.map((idea) => (
-        <div
-          key={idea.id}
-          onClick={() => router.push(`/ideas/${idea.id}`)}
-          className="grid grid-cols-[1fr_100px_60px_80px_100px] gap-4 items-center bg-surface rounded-card shadow-marshmallow p-4 cursor-pointer transition-all duration-300 hover:shadow-marshmallow-hover hover:-translate-y-0.5"
-        >
-          <div className="min-w-0">
-            <h3 className="text-sm font-bold text-text-main truncate">
-              {idea.title}
-            </h3>
-            <p className="text-xs text-text-muted truncate mt-0.5">
-              {idea.summary}
-            </p>
-          </div>
-
-          <Badge variant="secondary" className="text-xs w-fit">
-            {STATUS_LABELS[idea.status]}
-          </Badge>
-
-          <span
-            className={cn(
-              "text-sm font-bold",
-              idea.total_score == null
-                ? "text-text-muted"
-                : idea.total_score >= 80
-                  ? "text-score-high-text"
-                  : idea.total_score >= 60
-                    ? "text-score-mid-text"
-                    : "text-score-low-text",
-            )}
+        <div key={idea.id}>
+          {/* Desktop: table row */}
+          <div
+            onClick={() => router.push(`/ideas/${idea.id}`)}
+            className="hidden md:grid grid-cols-[1fr_100px_60px_80px_100px] gap-4 items-center bg-surface rounded-card shadow-marshmallow p-4 cursor-pointer transition-all duration-300 hover:shadow-marshmallow-hover hover:-translate-y-0.5"
           >
-            {idea.total_score ?? "—"}
-          </span>
+            <div className="min-w-0">
+              <h3 className="text-sm font-bold text-text-main truncate">
+                {idea.title}
+              </h3>
+              <p className="text-xs text-text-muted truncate mt-0.5">
+                {idea.summary}
+              </p>
+            </div>
 
-          <div className="flex justify-center">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                onBookmarkToggle(idea.id, !idea.bookmarked);
-              }}
-              className="text-text-muted hover:text-primary transition-colors"
-            >
-              {idea.bookmarked ? (
-                <BookmarkCheck className="size-4 text-primary fill-primary/20" />
-              ) : (
-                <Bookmark className="size-4" />
+            <Badge variant="secondary" className="text-xs w-fit">
+              {STATUS_LABELS[idea.status]}
+            </Badge>
+
+            <span
+              className={cn(
+                "text-sm font-bold",
+                idea.total_score == null
+                  ? "text-text-muted"
+                  : idea.total_score >= 80
+                    ? "text-score-high-text"
+                    : idea.total_score >= 60
+                      ? "text-score-mid-text"
+                      : "text-score-low-text",
               )}
-            </button>
+            >
+              {idea.total_score ?? "—"}
+            </span>
+
+            <div className="flex justify-center">
+              <BookmarkButton
+                bookmarked={idea.bookmarked}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onBookmarkToggle(idea.id, !idea.bookmarked);
+                }}
+              />
+            </div>
+
+            <span className="text-xs text-text-muted">
+              {formatDate(idea.created_at)}
+            </span>
           </div>
 
-          <span className="text-xs text-text-muted">
-            {formatDate(idea.created_at)}
-          </span>
+          {/* Mobile: card view */}
+          <div
+            onClick={() => router.push(`/ideas/${idea.id}`)}
+            className="md:hidden bg-surface rounded-card-lg shadow-marshmallow p-4 cursor-pointer transition-all duration-300 hover:shadow-marshmallow-hover"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0 flex-1">
+                <h3 className="text-sm font-bold text-text-main truncate">
+                  {idea.title}
+                </h3>
+                <p className="text-xs text-text-muted mt-1 line-clamp-2">
+                  {idea.summary}
+                </p>
+              </div>
+              <BookmarkButton
+                bookmarked={idea.bookmarked}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onBookmarkToggle(idea.id, !idea.bookmarked);
+                }}
+              />
+            </div>
+            <div className="flex items-center gap-2 mt-3">
+              <Badge variant="secondary" className="text-xs">
+                {STATUS_LABELS[idea.status]}
+              </Badge>
+              {idea.total_score != null && (
+                <span
+                  className={cn(
+                    "text-xs font-bold",
+                    idea.total_score >= 80
+                      ? "text-score-high-text"
+                      : idea.total_score >= 60
+                        ? "text-score-mid-text"
+                        : "text-score-low-text",
+                  )}
+                >
+                  {idea.total_score}점
+                </span>
+              )}
+              <span className="text-xs text-text-muted ml-auto">
+                {formatDate(idea.created_at)}
+              </span>
+            </div>
+          </div>
         </div>
       ))}
 
@@ -96,9 +137,31 @@ export function IdeaList({
   );
 }
 
+function BookmarkButton({
+  bookmarked,
+  onClick,
+}: {
+  bookmarked: boolean;
+  onClick: (e: React.MouseEvent) => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      aria-label={bookmarked ? "북마크 해제" : "북마크"}
+      aria-pressed={bookmarked}
+      className="min-w-10 min-h-10 flex items-center justify-center rounded-full text-text-muted hover:text-primary hover:bg-muted/50 transition-colors"
+    >
+      {bookmarked ? (
+        <BookmarkCheck className="size-4 text-primary fill-primary/20" />
+      ) : (
+        <Bookmark className="size-4" />
+      )}
+    </button>
+  );
+}
+
 function formatDate(ts: unknown): string {
   if (!ts) return "—";
-  // Firestore timestamps come as { _seconds, _nanoseconds } or ISO string
   const raw = ts as { _seconds?: number } | string;
   if (typeof raw === "string") return new Date(raw).toLocaleDateString("ko-KR");
   if (typeof raw === "object" && raw._seconds) {
