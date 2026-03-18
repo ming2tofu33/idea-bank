@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { Spline_Sans } from "next/font/google";
+import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { AppSidebar } from "@/components/app-sidebar";
 import "./globals.css";
 
 const splineSans = Spline_Sans({
@@ -21,7 +24,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" className={splineSans.variable}>
-      <body className="font-sans antialiased">{children}</body>
+      <body className="font-sans antialiased">
+        <TooltipProvider>
+          <SidebarProvider>
+            <AppSidebar />
+            <SidebarInset>
+              <main className="flex-1 p-6 bg-background min-h-screen">
+                {children}
+              </main>
+            </SidebarInset>
+          </SidebarProvider>
+        </TooltipProvider>
+      </body>
     </html>
   );
 }
