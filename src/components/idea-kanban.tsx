@@ -23,13 +23,13 @@ export function IdeaKanban({
   onBookmarkToggle,
 }: IdeaKanbanProps) {
   return (
-    <div className="flex gap-3 overflow-x-auto pb-4 md:grid md:grid-cols-3 lg:grid-cols-6">
+    <div className="flex gap-3 overflow-x-auto pb-4">
       {STATUS_COLUMNS.map((status) => {
         const columnIdeas = ideas.filter((i) => i.status === status);
         return (
           <div
             key={status}
-            className="min-w-[200px] flex-1 bg-muted/30 rounded-card-lg p-3 border border-border/50"
+            className="min-w-[220px] w-[220px] shrink-0 bg-muted/30 rounded-card-lg p-3 border border-border/50"
           >
             {/* Column header */}
             <div className="flex items-center justify-between mb-3 px-1">
