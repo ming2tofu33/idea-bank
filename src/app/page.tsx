@@ -44,7 +44,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto">
+    <div className="w-full">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-foreground">대시보드</h1>
