@@ -4,6 +4,7 @@ import { callOpenAI, MODELS } from "@/server/openai";
 import { errorResponse, withRetry } from "@/lib/errors";
 import { buildReportPrompt } from "@/server/prompts/report";
 import { validateReportResponse } from "@/server/validators/report-response";
+import { searchForReport } from "@/server/tavily";
 import { FieldValue } from "firebase-admin/firestore";
 import type { ReportRequest, AIRunCreateInput } from "@/types";
 
@@ -21,8 +22,7 @@ export async function POST(request: NextRequest) {
     }
     const idea = ideaDoc.data()!;
 
-    // 2. Build prompt & call GPT-4o
-    const { systemPrompt, userPrompt } = buildReportPrompt({
+    const ideaInput = {
       id: ideaDoc.id,
       title: idea.title as string,
       summary: idea.summary as string,
@@ -30,7 +30,22 @@ export async function POST(request: NextRequest) {
       target_user: idea.target_user as string,
       problem: idea.problem as string,
       solution_hint: idea.solution_hint as string,
-    });
+    };
+
+    // 2. Tavily 웹 검색 (경쟁사 + 시장 데이터 + 트렌드)
+    let searchData;
+    try {
+      searchData = await searchForReport(ideaInput);
+    } catch {
+      // 검색 실패해도 보고서 생성은 계속 진행
+      searchData = undefined;
+    }
+
+    // 3. Build prompt with search results & call GPT-4o
+    const { systemPrompt, userPrompt } = buildReportPrompt(
+      ideaInput,
+      searchData,
+    );
 
     let aiResult = await callOpenAI({
       model: MODELS.ANALYSIS,
@@ -53,10 +68,10 @@ export async function POST(request: NextRequest) {
       validation = validateReportResponse(aiResult.content);
     }
 
-    // 3. Log ai_run
+    // 4. Log ai_run
     const aiRunData: AIRunCreateInput = {
       run_type: "deep_report",
-      prompt_version: "prd.v1",
+      prompt_version: "prd.v2",
       model: MODELS.ANALYSIS,
       input_tokens: aiResult.inputTokens,
       output_tokens: aiResult.outputTokens,
@@ -76,7 +91,7 @@ export async function POST(request: NextRequest) {
       return errorResponse("VALIDATION_FAILED", validation.error, 422);
     }
 
-    // 4. Save report to deep_reports collection
+    // 5. Save report to deep_reports collection
     const reportRef = await withRetry(() =>
       collections.deepReports.add({
         ...validation.data,
@@ -85,7 +100,7 @@ export async function POST(request: NextRequest) {
       }),
     );
 
-    // 5. Update idea: link report + transition to reviewing
+    // 6. Update idea: link report + transition to reviewing
     await collections.ideas.doc(body.idea_id).update({
       deep_report_id: reportRef.id,
       status: "reviewing",
