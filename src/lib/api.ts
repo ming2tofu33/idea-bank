@@ -8,6 +8,7 @@ import type {
   GenerateRequest,
   GenerateResponse,
   DeepReportResponse,
+  StatsResponse,
   EvaluateResponse,
 } from "@/types";
 
@@ -98,4 +99,10 @@ export function evaluateIdea(
     method: "POST",
     body: JSON.stringify({ idea_id: ideaId }),
   });
+}
+
+// ── Stats ──
+
+export function fetchStats(): Promise<StatsResponse> {
+  return request("/api/stats");
 }

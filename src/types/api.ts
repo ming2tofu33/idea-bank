@@ -113,3 +113,11 @@ export interface ErrorResponse {
   message: string;
   details?: string;
 }
+
+/** GET /api/stats */
+export interface StatsResponse {
+  stale_archived_count: number;
+  monthly_cost_usd: number;
+  monthly_api_calls: number;
+  sessions_this_week: number;
+}
