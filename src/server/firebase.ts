@@ -26,4 +26,5 @@ export const collections = {
   sessions: db.collection("sessions"),
   keywords: db.collection("keywords"),
   aiRuns: db.collection("ai_runs"),
+  deepReports: db.collection("deep_reports"),
 } as const;
