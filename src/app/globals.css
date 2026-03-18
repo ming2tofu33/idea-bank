@@ -29,7 +29,7 @@
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: #4A4A57;
   --muted: oklch(0.97 0 0);
-  --muted-foreground: #9898A6;
+  --muted-foreground: #6B6B7B; /* WCAG AA 4.5:1+ on cream #FDFCF8 */
   --accent: oklch(0.97 0 0);
   --accent-foreground: #4A4A57;
   --destructive: oklch(0.577 0.245 27.325);
@@ -134,7 +134,7 @@
   --color-surface: #FFFFFF;
   --color-primary-soft: #9CB6DD;
   --color-text-main: #4A4A57;
-  --color-text-muted: #9898A6;
+  --color-text-muted: #6B6B7B;
 
   /* Keyword category pastel accents */
   --color-accent-peach: #FFB7B2;
@@ -148,6 +148,17 @@
   --radius-card-lg: 1.5rem;
   --radius-card-xl: 2rem;
   --radius-card-2xl: 3rem;
+
+  /* Score semantic colors (WCAG AA compliant) */
+  --color-score-high-bg: #dcfce7;
+  --color-score-high-text: #166534;
+  --color-score-high-stroke: #16a34a;
+  --color-score-mid-bg: #fef3c7;
+  --color-score-mid-text: #92400e;
+  --color-score-mid-stroke: #d97706;
+  --color-score-low-bg: #fee2e2;
+  --color-score-low-text: #991b1b;
+  --color-score-low-stroke: #ef4444;
 
   /* Marshmallow neumorphic shadows */
   --shadow-marshmallow: 8px 8px 24px rgba(210, 205, 194, 0.5),
@@ -210,4 +221,16 @@
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* ── Accessibility ── */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

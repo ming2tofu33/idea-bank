@@ -19,15 +19,20 @@ export function ScoreRing({ score, size = 160, className }: ScoreRingProps) {
 
   const color =
     score >= 80
-      ? "stroke-green-500"
+      ? "stroke-score-high-stroke"
       : score >= 60
-        ? "stroke-amber-500"
-        : "stroke-red-400";
+        ? "stroke-score-mid-stroke"
+        : "stroke-score-low-stroke";
 
   return (
     <div className={cn("flex flex-col items-center gap-2", className)}>
-      <svg width={size} height={size} className="-rotate-90">
-        {/* Background circle */}
+      <svg
+        width={size}
+        height={size}
+        className="-rotate-90"
+        role="img"
+        aria-label={`총점 ${score}점, ${label}`}
+      >
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -37,7 +42,6 @@ export function ScoreRing({ score, size = 160, className }: ScoreRingProps) {
           strokeWidth={strokeWidth}
           className="text-muted"
         />
-        {/* Progress circle */}
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -47,10 +51,9 @@ export function ScoreRing({ score, size = 160, className }: ScoreRingProps) {
           strokeLinecap="round"
           strokeDasharray={circumference}
           strokeDashoffset={offset}
-          className={cn(color, "transition-all duration-1000 ease-out")}
+          className={cn(color, "transition-all duration-500 ease-out")}
         />
       </svg>
-      {/* Center text (overlaid) */}
       <div
         className="absolute flex flex-col items-center justify-center"
         style={{ width: size, height: size }}

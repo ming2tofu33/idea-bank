@@ -52,7 +52,7 @@ export function EvaluationView({ evaluation }: EvaluationViewProps) {
                 </span>
                 <div className="flex-1 h-3 bg-muted rounded-full overflow-hidden">
                   <div
-                    className="h-full rounded-full bg-primary transition-all duration-1000 ease-out"
+                    className="h-full rounded-full bg-primary transition-all duration-500 ease-out"
                     style={{ width: `${score}%` }}
                   />
                 </div>
