@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { KeywordPicker } from "@/components/keyword-picker";
 import { KeywordDock } from "@/components/keyword-dock";
+import { SerendipityCard } from "@/components/serendipity-card";
 import { IdeaCard } from "@/components/idea-card";
-import { generateIdeas, patchIdea } from "@/lib/api";
+import { generateIdeas, patchIdea, fetchKeywords } from "@/lib/api";
 import { Sparkles, RotateCcw, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Keyword, GenerationMode, IdeaGenerated } from "@/types";
@@ -17,12 +19,33 @@ interface GeneratedIdea extends IdeaGenerated {
 }
 
 export default function GeneratePage() {
+  const searchParams = useSearchParams();
   const [step, setStep] = useState<GenerateStep>("pick");
   const [selectedKeywords, setSelectedKeywords] = useState<Keyword[]>([]);
   const [selectedMode, setSelectedMode] =
     useState<GenerationMode>("full_match");
   const [generatedIdeas, setGeneratedIdeas] = useState<GeneratedIdea[]>([]);
   const [error, setError] = useState<string | null>(null);
+
+  // 대시보드에서 추천 조합 클릭 시 → 자동으로 키워드 채우기
+  useEffect(() => {
+    const serendipityIds = searchParams.get("serendipity");
+    if (!serendipityIds) return;
+
+    const ids = serendipityIds.split(",");
+    fetchKeywords().then((data) => {
+      const matched = data.keywords.filter((k) => ids.includes(k.id));
+      if (matched.length > 0) {
+        setSelectedKeywords(matched);
+        setSelectedMode("serendipity");
+      }
+    });
+  }, [searchParams]);
+
+  const handleSerendipitySelect = (keywords: Keyword[]) => {
+    setSelectedKeywords(keywords);
+    setSelectedMode("serendipity");
+  };
 
   const handleToggle = (keyword: Keyword) => {
     setSelectedKeywords((prev) => {
@@ -101,6 +124,11 @@ export default function GeneratePage() {
       {/* Step: PICK */}
       {step === "pick" && (
         <>
+          {/* Serendipity recommendations */}
+          <div className="mb-8">
+            <SerendipityCard onSelect={handleSerendipitySelect} />
+          </div>
+
           <KeywordPicker
             selectedKeywords={selectedKeywords}
             onToggle={handleToggle}

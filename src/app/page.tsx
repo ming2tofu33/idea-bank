@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useFetch } from "@/hooks/use-fetch";
 import { fetchIdeas } from "@/lib/api";
 import { IdeaCard } from "@/components/idea-card";
+import { SerendipityCard } from "@/components/serendipity-card";
 import { patchIdea } from "@/lib/api";
 import { Button } from "@/components/ui/button";
 import { LoadingSkeleton } from "@/components/loading-skeleton";
@@ -14,9 +16,16 @@ import {
   BookmarkCheck,
   Eye,
 } from "lucide-react";
+import type { Keyword } from "@/types";
 
 export default function DashboardPage() {
+  const router = useRouter();
   const { data, loading, refetch } = useFetch(() => fetchIdeas());
+
+  const handleSerendipitySelect = (keywords: Keyword[]) => {
+    const ids = keywords.map((k) => k.id).join(",");
+    router.push(`/generate?serendipity=${ids}`);
+  };
 
   const ideas = data?.ideas ?? [];
   const bookmarked = ideas.filter((i) => i.bookmarked);
@@ -66,6 +75,11 @@ export default function DashboardPage() {
             </p>
           </div>
         </Link>
+      </div>
+
+      {/* Serendipity Recommendations */}
+      <div className="mb-8">
+        <SerendipityCard onSelect={handleSerendipitySelect} />
       </div>
 
       {/* Stats */}
