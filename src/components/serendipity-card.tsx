@@ -57,7 +57,7 @@ export function SerendipityCard({ onSelect }: SerendipityCardProps) {
             key={`${seed}-${i}`}
             onClick={() => onSelect(combo)}
             aria-label={`추천 조합 ${i + 1}: ${combo.map((k) => k.keyword).join(", ")}`}
-            className="group bg-surface rounded-card-lg shadow-marshmallow border border-white/80 p-5 text-left transition-all duration-300 hover:shadow-marshmallow-hover hover:-translate-y-1 cursor-pointer"
+            className="group bg-surface rounded-card-lg shadow-marshmallow border border-border p-5 text-left transition-all duration-300 hover:shadow-marshmallow-hover hover:-translate-y-1 cursor-pointer"
           >
             {/* Combo pills */}
             <div className="flex flex-wrap gap-2 mb-4">
