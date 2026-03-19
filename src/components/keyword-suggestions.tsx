@@ -89,8 +89,8 @@ export function KeywordSuggestions({ existingKeywords, onAdd }: KeywordSuggestio
               disabled={isAdding}
               className={cn(
                 "group flex items-center gap-1.5 rounded-full px-3 py-1.5 border text-sm font-medium transition-all",
-                "bg-background border-border text-text-main",
-                "hover:border-transparent hover:shadow-marshmallow",
+                "border-border text-text-main",
+                "hover:brightness-110 hover:border-border/60",
                 colors.bg,
                 isAdding && "opacity-50 cursor-not-allowed",
               )}
