@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Info, AlertTriangle, HelpCircle } from "lucide-react";
+import { Info, AlertTriangle, HelpCircle, ChevronDown } from "lucide-react";
 import type { EvaluationRationaleResponse } from "@/types";
 
 interface RationaleAccordionProps {
@@ -28,6 +28,7 @@ export function RationaleAccordion({
     <details className="bg-surface rounded-card shadow-marshmallow border border-white/80 overflow-hidden group">
       <summary className="flex items-center justify-between p-4 cursor-pointer hover:bg-muted/50 transition-colors list-none [&::-webkit-details-marker]:hidden">
         <div className="flex items-center gap-3">
+          <ChevronDown className="size-4 text-text-muted transition-transform duration-200 group-open:rotate-180" />
           <span className="text-sm font-bold text-text-main">
             {DIMENSION_LABELS[dimension] ?? dimension}
           </span>
