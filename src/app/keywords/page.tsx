@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { KeywordGrid } from "@/components/keyword-grid";
+import { KeywordSuggestions } from "@/components/keyword-suggestions";
 import { useFetch } from "@/hooks/use-fetch";
 import { fetchKeywords, createKeyword, deleteKeyword } from "@/lib/api";
 import { CATEGORY_ORDER } from "@/lib/constants";
@@ -26,14 +27,18 @@ export default function KeywordsPage() {
   const [deleteLoading, setDeleteLoading] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
 
+  const addKeyword = async (keyword: string, category: KeywordCategory) => {
+    await createKeyword({ keyword, category });
+    refetch();
+  };
+
   const handleAdd = async () => {
     if (!newKeyword.trim()) return;
     setAddLoading(true);
     setActionError(null);
     try {
-      await createKeyword({ keyword: newKeyword.trim(), category: newCategory });
+      await addKeyword(newKeyword.trim(), newCategory);
       setNewKeyword("");
-      refetch();
     } catch (err) {
       setActionError(
         err instanceof Error ? err.message : "추가 중 오류 발생",
@@ -120,6 +125,14 @@ export default function KeywordsPage() {
           </Button>
         </div>
       </div>
+
+      {/* 추천 키워드 */}
+      {!loading && (
+        <KeywordSuggestions
+          existingKeywords={data?.keywords ?? []}
+          onAdd={addKeyword}
+        />
+      )}
 
       {/* Keyword grid */}
       {loading ? (
