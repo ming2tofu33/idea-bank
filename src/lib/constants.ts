@@ -58,7 +58,9 @@ export const STATUS_LABELS: Record<IdeaStatus, string> = {
 
 export const STATUS_COLUMNS: IdeaStatus[] = [
   "new",
+  "interested",
   "reviewing",
+  "executing",
   "on_hold",
   "archived",
 ];

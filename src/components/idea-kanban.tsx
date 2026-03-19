@@ -17,6 +17,15 @@ interface IdeaKanbanProps {
   onBookmarkToggle: (id: string, bookmarked: boolean) => void;
 }
 
+const COLUMN_EMPTY_HINTS: Record<IdeaStatus, { icon: string; text: string }> = {
+  new: { icon: "✦", text: "아이디어 생성 후 자동으로 추가됩니다" },
+  interested: { icon: "★", text: "관심 있는 아이디어를 여기로 옮기세요" },
+  reviewing: { icon: "🔍", text: "깊게 탐구할 아이디어를 옮기세요" },
+  executing: { icon: "⚡", text: "실행 중인 아이디어가 여기 표시됩니다" },
+  on_hold: { icon: "⏸", text: "잠시 보류 중인 아이디어" },
+  archived: { icon: "📦", text: "보관된 아이디어가 여기 있습니다" },
+};
+
 export function IdeaKanban({
   ideas,
   onStatusChange,
@@ -24,7 +33,7 @@ export function IdeaKanban({
 }: IdeaKanbanProps) {
   return (
     <div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pb-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 pb-4">
         {STATUS_COLUMNS.map((status) => {
           const columnIdeas = ideas.filter((i) => i.status === status);
           return (
@@ -72,11 +81,11 @@ export function IdeaKanban({
                   </div>
                 ))}
                 {columnIdeas.length === 0 && (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <div className="size-8 rounded-full bg-muted/50 mx-auto mb-2 flex items-center justify-center">
-                      <span className="text-xs">—</span>
-                    </div>
-                    <span className="text-xs">비어 있음</span>
+                  <div className="text-center py-8 px-2">
+                    <div className="text-2xl mb-2">{COLUMN_EMPTY_HINTS[status].icon}</div>
+                    <p className="text-xs text-text-muted leading-snug">
+                      {COLUMN_EMPTY_HINTS[status].text}
+                    </p>
                   </div>
                 )}
               </div>
