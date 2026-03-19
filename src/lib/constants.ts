@@ -94,23 +94,23 @@ export const CATEGORY_COLORS: Record<
 > = {
   who: {
     bg: "bg-accent-peach/30",
-    text: "text-orange-600/70",
+    text: "text-orange-700 dark:text-orange-300",
     dot: "bg-accent-peach",
   },
   domain: {
     bg: "bg-accent-mint/30",
-    text: "text-teal-600/70",
+    text: "text-teal-700 dark:text-teal-300",
     dot: "bg-accent-mint",
   },
   tech: {
     bg: "bg-accent-lime/40",
-    text: "text-lime-700/70",
+    text: "text-lime-700 dark:text-lime-300",
     dot: "bg-accent-lime",
   },
   value: {
     bg: "bg-accent-purple/30",
-    text: "text-purple-600/70",
-    dot: "bg-purple-200",
+    text: "text-purple-700 dark:text-purple-300",
+    dot: "bg-accent-purple",
   },
   money: {
     bg: "bg-primary/20",
