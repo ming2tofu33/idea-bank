@@ -22,10 +22,11 @@ export function LoadingSkeleton({
   }[variant];
 
   return (
-    <>
+    <div role="status" aria-label="로딩 중">
       {Array.from({ length: count }).map((_, i) => (
         <div key={i} className={cn(baseClass, variantClass, className)} />
       ))}
-    </>
+      <span className="sr-only">로딩 중...</span>
+    </div>
   );
 }
