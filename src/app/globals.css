@@ -72,8 +72,8 @@
   --accent: #181A24;
   --accent-foreground: #E8E9ED;
   --destructive: #ef4444;
-  --border: rgba(200, 210, 255, 0.06);
-  --input: rgba(200, 210, 255, 0.08);
+  --border: rgba(200, 210, 255, 0.10);
+  --input: rgba(200, 210, 255, 0.12);
   --ring: #6B8AFF;
   --chart-1: oklch(0.809 0.105 251.813);
   --chart-2: oklch(0.623 0.214 259.815);
@@ -86,7 +86,7 @@
   --sidebar-primary-foreground: #FFFFFF;
   --sidebar-accent: #181A24;
   --sidebar-accent-foreground: #E8E9ED;
-  --sidebar-border: rgba(200, 210, 255, 0.06);
+  --sidebar-border: rgba(200, 210, 255, 0.10);
   --sidebar-ring: #6B8AFF;
 }
 
