@@ -300,6 +300,9 @@
 .floating-bubble:active {
   transform: scale(0.95);
 }
+.dark .floating-bubble:hover {
+  transform: scale(1.02) translateY(-2px);
+}
 
 .marker-highlight {
   background: linear-gradient(120deg, #fffbeb 0%, #fef3c7 100%);
