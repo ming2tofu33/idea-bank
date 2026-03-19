@@ -8,7 +8,25 @@
       "Bash(npx tsc:*)",
       "Bash(mkdir -p src/server)",
       "Bash(mv src/lib/firebase.ts src/server/firebase.ts)",
-      "Bash(mv src/lib/openai.ts src/server/openai.ts)"
+      "Bash(mv src/lib/openai.ts src/server/openai.ts)",
+      "Bash(rm -f .env.local)",
+      "Bash(mv .env .env.local)",
+      "Bash(npx tsx:*)",
+      "Bash(node --env-file=.env.local node_modules/.bin/tsx scripts/seed-keywords.ts)",
+      "Bash(curl -s http://localhost:3003/api/keywords)",
+      "Read(//tmp/**)",
+      "Bash(curl -s \"http://localhost:3003/api/keywords?category=who\")",
+      "Bash(curl -v \"http://localhost:3003/api/keywords?category=who\")",
+      "Bash(curl -s -X POST http://localhost:3006/api/report -H \"Content-Type: application/json\" -d '{\"\"\"\"idea_id\"\"\"\":\"\"\"\"srnS40Isgk922OOybTvq\"\"\"\"}')",
+      "Bash(curl -s -X POST http://localhost:3006/api/evaluate -H \"Content-Type: application/json\" -d '{\"\"\"\"idea_id\"\"\"\":\"\"\"\"srnS40Isgk922OOybTvq\"\"\"\"}')",
+      "Bash(npx shadcn@latest add sidebar badge input select separator tooltip -y)",
+      "Bash(python \"C:\\\\Users\\\\amy\\\\.claude\\\\skills\\\\ui-ux-pro-max\\\\scripts\\\\search.py\" \"neumorphic soft warm marshmallow creative\" --domain style -n 5)",
+      "Bash(python \"C:\\\\Users\\\\amy\\\\.claude\\\\skills\\\\ui-ux-pro-max\\\\scripts\\\\search.py\" \"accessibility focus contrast animation\" --domain ux -n 10)",
+      "Bash(python \"C:\\\\Users\\\\amy\\\\.claude\\\\skills\\\\ui-ux-pro-max\\\\scripts\\\\search.py\" \"sidebar dashboard card\" --stack shadcn)",
+      "WebFetch(domain:0to1log.com)",
+      "Bash(python \"C:\\\\Users\\\\amy\\\\.claude\\\\skills\\\\ui-ux-pro-max\\\\scripts\\\\search.py\" \"dark mode neumorphic soft creative tool\" --domain style -n 5)",
+      "Bash(python \"C:\\\\Users\\\\amy\\\\.claude\\\\skills\\\\ui-ux-pro-max\\\\scripts\\\\search.py\" \"pink rose feminine soft warm pastel\" --domain color -n 5)",
+      "Bash(node -e \"console.log\\(require\\(''next-auth/package.json''\\).version\\)\")"
     ]
   }
 }
