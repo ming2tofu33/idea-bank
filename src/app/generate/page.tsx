@@ -1,15 +1,25 @@
 "use client";
 
-import { Suspense, useState, useEffect, useRef, useCallback } from "react";
+import { Suspense, useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import { KeywordPicker } from "@/components/keyword-picker";
 import { KeywordDock } from "@/components/keyword-dock";
 import { SerendipityCard } from "@/components/serendipity-card";
 import { IdeaCard } from "@/components/idea-card";
 import { generateIdeas, patchIdea, fetchKeywords } from "@/lib/api";
+import { useNavigationBlock } from "@/hooks/use-navigation-block";
 import { Sparkles, RotateCcw, AlertCircle, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { Keyword, GenerationMode, IdeaGenerated } from "@/types";
+
+const BLOCK_MESSAGES = [
+  { emoji: "🤔", text: "AI가 지금 막 열심히 생각 중이에요" },
+  { emoji: "⚡", text: "잠깐! 거의 다 왔어요" },
+  { emoji: "✨", text: "아이디어들이 방금 완성 직전이에요" },
+  { emoji: "🏃", text: "어디 가세요? 결과가 나오려는 참인데요" },
+  { emoji: "😢", text: "나가면 저 혼자 만들어 놓고 슬퍼해요" },
+  { emoji: "💡", text: "조금만 기다려줘요, 곧 보여드릴게요" },
+];
 
 type GenerateStep = "pick" | "loading" | "results";
 
@@ -46,6 +56,15 @@ function GeneratePage() {
   const [elapsed, setElapsed] = useState(0);
   const [lastSession, setLastSession] = useState<SavedSession | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // 생성 중 페이지 이탈 차단
+  const { showModal, confirmLeave, cancelLeave } = useNavigationBlock(step === "loading");
+  const blockMessage = useMemo(
+    () => BLOCK_MESSAGES[Math.floor(Math.random() * BLOCK_MESSAGES.length)],
+    // showModal이 열릴 때마다 새 메시지 뽑기
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [showModal],
+  );
 
   // sessionStorage에서 이전 결과 복원
   useEffect(() => {
@@ -190,6 +209,35 @@ function GeneratePage() {
 
   return (
     <div className="pb-28">
+      {/* 이탈 차단 모달 */}
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="bg-card rounded-card-xl shadow-float border border-border p-8 max-w-sm w-full mx-4 text-center">
+            <div className="text-4xl mb-4">{blockMessage.emoji}</div>
+            <h2 className="text-lg font-bold text-foreground mb-2">
+              {blockMessage.text}
+            </h2>
+            <p className="text-sm text-muted-foreground mb-6">
+              지금 나가면 생성 결과를 못 볼 수도 있어요.
+            </p>
+            <div className="flex gap-3">
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={confirmLeave}
+              >
+                그냥 나갈게요
+              </Button>
+              <Button
+                className="flex-1"
+                onClick={cancelLeave}
+              >
+                기다릴게요
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-text-main">발산 세션</h1>
