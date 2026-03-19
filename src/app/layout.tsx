@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Spline_Sans } from "next/font/google";
 import { SessionProvider } from "next-auth/react";
+import { Toaster } from "sonner";
 import { AuthLayout } from "@/components/auth-layout";
 import "./globals.css";
 
@@ -26,6 +27,7 @@ export default function RootLayout({
       <body className="font-sans antialiased">
         <SessionProvider>
           <AuthLayout>{children}</AuthLayout>
+          <Toaster position="bottom-right" richColors />
         </SessionProvider>
       </body>
     </html>
