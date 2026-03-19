@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { collections } from "@/server/firebase";
-import { checkStaleIdeas } from "@/server/stale-checker";
+import { countStaleIdeas } from "@/server/stale-checker";
 import { getAuthUser } from "@/server/auth-guard";
 import type { StatsResponse } from "@/types";
 
@@ -14,17 +14,22 @@ export async function GET() {
   const user = await getAuthUser();
   if (user instanceof Response) return user;
 
-  // 1. Run stale check (user-scoped)
-  const staleCount = await checkStaleIdeas(user.userId);
-
-  // 2. Monthly cost from ai_runs (global — cost is shared)
   const monthStart = new Date();
   monthStart.setDate(1);
   monthStart.setHours(0, 0, 0, 0);
 
-  const aiRuns = await collections.aiRuns
-    .where("created_at", ">=", monthStart)
-    .get();
+  const weekAgo = new Date();
+  weekAgo.setDate(weekAgo.getDate() - 7);
+
+  // 3개 쿼리를 병렬 실행 (모두 읽기 전용)
+  const [staleCount, aiRuns, sessions] = await Promise.all([
+    countStaleIdeas(user.userId),
+    collections.aiRuns.where("created_at", ">=", monthStart).get(),
+    collections.sessions
+      .where("user_id", "==", user.userId)
+      .where("session_date", ">=", weekAgo)
+      .get(),
+  ]);
 
   let totalCost = 0;
   let callCount = 0;
@@ -36,15 +41,6 @@ export async function GET() {
       (data.output_tokens / 1000) * pricing.output;
     callCount++;
   });
-
-  // 3. Sessions this week (user-scoped)
-  const weekAgo = new Date();
-  weekAgo.setDate(weekAgo.getDate() - 7);
-
-  const sessions = await collections.sessions
-    .where("user_id", "==", user.userId)
-    .where("session_date", ">=", weekAgo)
-    .get();
 
   const response: StatsResponse = {
     stale_archived_count: staleCount,

@@ -44,3 +44,17 @@ export async function checkStaleIdeas(userId?: string): Promise<number> {
 
   return staleIds.length;
 }
+
+/**
+ * 14일 이상 방치된 아이디어 중 이미 stale_flag로 아카이브된 건수 조회 (읽기 전용).
+ * Stats API 등 GET 요청에서 사용 — 쓰기 없음.
+ */
+export async function countStaleIdeas(userId: string): Promise<number> {
+  const snapshot = await collections.ideas
+    .where("user_id", "==", userId)
+    .where("stale_flag", "==", true)
+    .count()
+    .get();
+
+  return snapshot.data().count;
+}
