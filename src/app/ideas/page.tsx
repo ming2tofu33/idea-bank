@@ -5,6 +5,7 @@ import { IdeaKanban } from "@/components/idea-kanban";
 import { IdeaList } from "@/components/idea-list";
 import { useFetch } from "@/hooks/use-fetch";
 import { fetchIdeas, patchIdea } from "@/lib/api";
+import { toast } from "sonner";
 import { LoadingSkeleton } from "@/components/loading-skeleton";
 import { Button } from "@/components/ui/button";
 import { LayoutGrid, List, AlertCircle } from "lucide-react";
@@ -21,7 +22,7 @@ export default function IdeasPage() {
       await patchIdea(id, { status: newStatus });
       refetch();
     } catch {
-      // Fail silently — user can retry
+      toast.error("상태 변경에 실패했습니다");
     }
   };
 
@@ -30,7 +31,7 @@ export default function IdeasPage() {
       await patchIdea(id, { bookmarked });
       refetch();
     } catch {
-      // Fail silently
+      toast.error("북마크 변경에 실패했습니다");
     }
   };
 
@@ -78,7 +79,7 @@ export default function IdeasPage() {
 
       {/* Content */}
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div aria-live="polite" aria-busy="true" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <LoadingSkeleton variant="card" count={6} />
         </div>
       ) : viewMode === "kanban" ? (

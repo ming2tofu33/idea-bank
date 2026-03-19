@@ -7,6 +7,7 @@ import { fetchIdeas, fetchStats } from "@/lib/api";
 import { IdeaCard } from "@/components/idea-card";
 import { SerendipityCard } from "@/components/serendipity-card";
 import { patchIdea } from "@/lib/api";
+import { toast } from "sonner";
 import { LoadingSkeleton } from "@/components/loading-skeleton";
 import {
   Sparkles,
@@ -42,7 +43,7 @@ export default function DashboardPage() {
       await patchIdea(id, { bookmarked: value });
       refetch();
     } catch {
-      // Fail silently
+      toast.error("북마크 변경에 실패했습니다");
     }
   };
 

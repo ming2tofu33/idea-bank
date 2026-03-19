@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { STATUS_LABELS, STATUS_COLUMNS } from "@/lib/constants";
+import { toast } from "sonner";
 import {
   ArrowLeft,
   FileText,
@@ -86,7 +87,7 @@ export default function IdeaDetailPage() {
       await patchIdea(id, { status: newStatus });
       refetch();
     } catch {
-      // Fail silently
+      toast.error("상태 변경에 실패했습니다");
     }
   };
 
@@ -96,7 +97,7 @@ export default function IdeaDetailPage() {
       await patchIdea(id, { bookmarked: !idea.bookmarked });
       refetch();
     } catch {
-      // Fail silently
+      toast.error("북마크 변경에 실패했습니다");
     }
   };
 
