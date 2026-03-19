@@ -86,13 +86,8 @@ export function KeywordPicker({ selectedKeywords, onToggle }: KeywordPickerProps
                     className={cn(
                       "group floating-bubble flex items-center gap-2.5 rounded-full px-6 py-3 border text-sm font-semibold transition-all",
                       isSelected
-                        ? cn(
-                            "shadow-marshmallow-inset",
-                            colors.bg,
-                            colors.text,
-                            "border-transparent",
-                          )
-                        : "bg-surface shadow-marshmallow border-white/60 text-text-main hover:shadow-marshmallow-hover",
+                        ? cn(colors.bg, colors.text, "border-border/40")
+                        : "bg-surface border-border text-text-main hover:bg-muted hover:border-border/70",
                     )}
                   >
                     <span className={cn("size-2.5 rounded-full", colors.dot)} />
@@ -115,11 +110,11 @@ export function KeywordPicker({ selectedKeywords, onToggle }: KeywordPickerProps
 
 function getCategoryColor(category: string): string {
   const map: Record<string, string> = {
-    who: "#FFB7B2",
-    domain: "#B5EAD7",
-    tech: "#E2F0CB",
-    value: "#F3E8FF",
-    money: "#136aec33",
+    who: "rgba(255,183,178,0.25)",
+    domain: "rgba(181,234,215,0.25)",
+    tech: "rgba(226,240,203,0.25)",
+    value: "rgba(243,232,255,0.25)",
+    money: "rgba(19,106,236,0.2)",
   };
-  return map[category] ?? "#E6E1D6";
+  return map[category] ?? "rgba(200,200,200,0.15)";
 }
