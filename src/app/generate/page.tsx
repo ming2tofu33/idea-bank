@@ -194,7 +194,7 @@ function GeneratePage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-text-main">발산 세션</h1>
         <p className="text-text-muted mt-1">
-          키워드를 조합하여 비즈니스 아이디어를 생성하세요
+          새로운 아이디어를 만들어보세요
         </p>
       </div>
 
@@ -262,7 +262,7 @@ function GeneratePage() {
           <div className="bg-surface rounded-card-xl shadow-marshmallow p-12 text-center">
             <Sparkles className="size-12 text-primary mx-auto mb-4 animate-pulse" />
             <h2 className="text-xl font-bold text-text-main mb-2">
-              아이디어를 생성하고 있어요...
+              아이디어를 만들고 있어요...
             </h2>
             <p className="text-2xl font-black text-primary tabular-nums">
               {elapsed}<span className="text-sm font-semibold text-text-muted">초</span>
@@ -277,7 +277,7 @@ function GeneratePage() {
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3 flex-wrap">
               <h2 className="text-xl font-bold text-text-main">
-                {generatedIdeas.length}개 아이디어 생성 완료
+                아이디어 {generatedIdeas.length}개 준비됐어요
               </h2>
               <div className="flex gap-1.5">
                 {selectedKeywords.map((kw) => (

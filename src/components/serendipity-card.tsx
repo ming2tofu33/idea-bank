@@ -82,7 +82,7 @@ export function SerendipityCard({ onSelect }: SerendipityCardProps) {
             {/* CTA */}
             <div className="flex items-center gap-1.5 text-xs font-semibold text-primary opacity-0 group-hover:opacity-100 transition-opacity">
               <Sparkles className="size-3.5" />
-              <span>이 조합으로 생성</span>
+              <span>이 조합으로 시작하기</span>
             </div>
           </button>
         ))}

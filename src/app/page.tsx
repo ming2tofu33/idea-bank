@@ -52,7 +52,7 @@ export default function DashboardPage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-foreground">대시보드</h1>
         <p className="text-muted-foreground mt-1">
-          오늘도 5분, 아이디어를 발산해보세요
+          오늘도 5분, 아이디어를 쏟아내 보세요
         </p>
       </div>
 
@@ -61,8 +61,7 @@ export default function DashboardPage() {
         <div className="mb-6 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-card p-4 flex items-center gap-3">
           <Archive className="size-5 text-amber-500 shrink-0" />
           <span className="text-sm text-amber-800 dark:text-amber-200">
-            {stats.stale_archived_count}개 아이디어가 14일 이상 방치되어 자동
-            아카이브되었습니다.
+            {stats.stale_archived_count}개 아이디어가 14일간 확인하지 않아 자동으로 보관됐습니다.
           </span>
           <Link
             href="/ideas"
@@ -128,7 +127,7 @@ export default function DashboardPage() {
         />
         <StatCard
           icon={<Archive className="size-5 text-muted-foreground" />}
-          label="방치 아카이브"
+          label="자동 보관"
           value={stats ? String(stats.stale_archived_count) : "—"}
           warn={!!stats && stats.stale_archived_count > 0}
         />

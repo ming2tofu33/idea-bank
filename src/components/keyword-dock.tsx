@@ -75,7 +75,7 @@ export function KeywordDock({
             size="lg"
           >
             <Sparkles className="size-4" />
-            <span>{generating ? "생성 중..." : "Mix Ideas"}</span>
+            <span>{generating ? "만드는 중..." : "아이디어 만들기"}</span>
           </Button>
         </div>
       </div>

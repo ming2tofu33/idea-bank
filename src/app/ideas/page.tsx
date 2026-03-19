@@ -43,7 +43,7 @@ export default function IdeasPage() {
         <div>
           <h1 className="text-3xl font-bold text-foreground">아이디어</h1>
           <p className="text-muted-foreground mt-1">
-            {loading ? "불러오는 중..." : `${ideas.length}개의 아이디어`}
+            {loading ? "불러오는 중..." : `아이디어 ${ideas.length}개`}
           </p>
         </div>
 
