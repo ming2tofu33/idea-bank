@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { collections } from "@/server/firebase";
-import { errorResponse } from "@/lib/errors";
+import { errorResponse, serverErrorResponse } from "@/lib/errors";
 import { getAuthUser } from "@/server/auth-guard";
 import { FieldValue } from "firebase-admin/firestore";
 import type { IdeaPatchInput } from "@/types";
@@ -23,8 +23,7 @@ export async function GET(
 
     return NextResponse.json({ id: doc.id, ...doc.data() });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    return errorResponse("INTERNAL_ERROR", message, 500);
+    return serverErrorResponse("INTERNAL_ERROR", error, "아이디어를 불러오는 중 오류가 발생했습니다");
   }
 }
 
@@ -75,7 +74,6 @@ export async function PATCH(
     const updated = await collections.ideas.doc(id).get();
     return NextResponse.json({ id: updated.id, ...updated.data() });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    return errorResponse("SAVE_FAILED", message, 500);
+    return serverErrorResponse("SAVE_FAILED", error, "아이디어 수정 중 오류가 발생했습니다");
   }
 }

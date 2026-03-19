@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { collections } from "@/server/firebase";
 import { callOpenAI, MODELS } from "@/server/openai";
-import { errorResponse, withRetry } from "@/lib/errors";
+import { errorResponse, serverErrorResponse, withRetry } from "@/lib/errors";
 import { buildReportPrompt } from "@/server/prompts/report";
 import { validateReportResponse } from "@/server/validators/report-response";
 import { searchForReport } from "@/server/tavily";
@@ -130,7 +130,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ report_id: reportRef.id, ...validation.data });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    return errorResponse("REPORT_FAILED", message, 500);
+    return serverErrorResponse("REPORT_FAILED", error, "리포트 생성 중 오류가 발생했습니다");
   }
 }

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { collections } from "@/server/firebase";
-import { errorResponse } from "@/lib/errors";
+import { errorResponse, serverErrorResponse } from "@/lib/errors";
 import { getAuthUser } from "@/server/auth-guard";
 
 // DELETE /api/keywords/[id] — delete custom keyword only (user-scoped)
@@ -31,7 +31,6 @@ export async function DELETE(
     await collections.keywords.doc(id).delete();
     return NextResponse.json({ deleted: true, id });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    return errorResponse("INTERNAL_ERROR", message, 500);
+    return serverErrorResponse("INTERNAL_ERROR", error, "키워드 삭제 중 오류가 발생했습니다");
   }
 }

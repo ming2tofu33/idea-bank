@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { collections } from "@/server/firebase";
 import { callOpenAI, MODELS } from "@/server/openai";
-import { errorResponse, withRetry } from "@/lib/errors";
+import { errorResponse, serverErrorResponse, withRetry } from "@/lib/errors";
 import { buildEvaluationPrompt } from "@/server/prompts/evaluation";
 import { validateEvaluationResponse } from "@/server/validators/evaluation-response";
 import { getAuthUser } from "@/server/auth-guard";
@@ -157,7 +157,6 @@ export async function POST(request: NextRequest) {
       ...evalData,
     });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    return errorResponse("EVALUATION_FAILED", message, 500);
+    return serverErrorResponse("EVALUATION_FAILED", error, "평가 중 오류가 발생했습니다");
   }
 }

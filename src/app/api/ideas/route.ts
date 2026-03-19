@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { collections } from "@/server/firebase";
-import { errorResponse, withRetry } from "@/lib/errors";
+import { errorResponse, serverErrorResponse, withRetry } from "@/lib/errors";
 import { getAuthUser } from "@/server/auth-guard";
 import { FieldValue } from "firebase-admin/firestore";
 import type { IdeaCreateInput } from "@/types";
@@ -38,8 +38,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ ideas, count: ideas.length });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    return errorResponse("INTERNAL_ERROR", message, 500);
+    return serverErrorResponse("INTERNAL_ERROR", error, "아이디어 목록을 불러오는 중 오류가 발생했습니다");
   }
 }
 
@@ -75,7 +74,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ id: docRef.id }, { status: 201 });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    return errorResponse("SAVE_FAILED", message, 500);
+    return serverErrorResponse("SAVE_FAILED", error, "아이디어 저장 중 오류가 발생했습니다");
   }
 }

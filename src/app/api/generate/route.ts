@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { collections } from "@/server/firebase";
 import { callOpenAI, MODELS } from "@/server/openai";
-import { errorResponse, withRetry } from "@/lib/errors";
+import { errorResponse, serverErrorResponse, withRetry } from "@/lib/errors";
 import {
   buildCuratedIdeasPrompt,
   buildSeedGenerationPrompt,
@@ -275,7 +275,6 @@ export async function POST(request: NextRequest) {
       session_id: sessionRef.id,
     });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    return errorResponse("GENERATION_FAILED", message, 500);
+    return serverErrorResponse("GENERATION_FAILED", error, "아이디어 생성 중 오류가 발생했습니다");
   }
 }
