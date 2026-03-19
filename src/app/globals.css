@@ -18,6 +18,7 @@
  */
 
 :root {
+  color-scheme: light;
   /* ── shadcn base tokens (overridden for Marshmallow) ── */
   --background: #FDFCF8;
   --foreground: #4A4A57;
@@ -55,6 +56,7 @@
 
 /* ── Midnight Theme: 0to1log.com inspired deep navy-black ── */
 .dark {
+  color-scheme: dark;
   --background: #08090E;
   --foreground: #E8E9ED;
   --card: #101118;
@@ -90,6 +92,7 @@
 
 /* ── Pink Theme: 0to1log.com inspired soft rose ── */
 .pink {
+  color-scheme: light;
   --background: #FFF0F3;
   --foreground: #4A3040;
   --card: #FFFFFF;
@@ -232,6 +235,24 @@
   --shadow-marshmallow-inset: inset 4px 4px 8px rgba(0, 0, 10, 0.6),
     inset -4px -4px 8px rgba(100, 120, 255, 0.02);
   --shadow-float: 0 20px 40px -10px rgba(107, 138, 255, 0.25);
+
+  /* dark accent: desaturated dark tints (파스텔이 형광처럼 보이는 문제 수정) */
+  --color-accent-peach:  #3D1F1D;
+  --color-accent-mint:   #132A22;
+  --color-accent-lime:   #1A2910;
+  --color-accent-purple: #221533;
+  --color-accent-orange: #2E1A0A;
+
+  /* dark score: dark tint bg + bright accessible text */
+  --color-score-high-bg:     #0D2818;
+  --color-score-high-text:   #4ade80;
+  --color-score-high-stroke: #22c55e;
+  --color-score-mid-bg:      #2A1C06;
+  --color-score-mid-text:    #fbbf24;
+  --color-score-mid-stroke:  #f59e0b;
+  --color-score-low-bg:      #2D0A0A;
+  --color-score-low-text:    #f87171;
+  --color-score-low-stroke:  #ef4444;
 }
 
 /* ── Pink theme: Marshmallow overrides ── */
