@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/server/firebase";
-import { callOpenAI, MODELS } from "@/server/openai";
 
+// GET /api/health — Firebase 연결 확인만 (OpenAI 실호출 없음 — 비용 공격 방어)
 export async function GET() {
   const results: Record<string, unknown> = {};
 
@@ -17,34 +17,17 @@ export async function GET() {
     results.firebase = { status: "error", message };
   }
 
-  // OpenAI test
-  try {
-    const response = await callOpenAI({
-      model: MODELS.GENERATION,
-      systemPrompt: "You are a test assistant. Respond in JSON.",
-      userPrompt:
-        'Respond with: {"status": "ok", "message": "OpenAI connected"}',
-      temperature: 0,
-    });
-    const parsed = JSON.parse(response.content);
-    results.openai = {
-      status: "connected",
-      model: MODELS.GENERATION,
-      data: parsed,
-      tokens: { input: response.inputTokens, output: response.outputTokens },
-      latencyMs: response.latencyMs,
-    };
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
-    results.openai = { status: "error", message };
-  }
+  // OpenAI: 실호출 없이 키 설정 여부만 확인
+  results.openai = {
+    status: process.env.OPENAI_API_KEY ? "configured" : "missing",
+  };
 
-  const allConnected =
+  const healthy =
     (results.firebase as Record<string, unknown>)?.status === "connected" &&
-    (results.openai as Record<string, unknown>)?.status === "connected";
+    (results.openai as Record<string, unknown>)?.status === "configured";
 
   return NextResponse.json(
-    { healthy: allConnected, services: results },
-    { status: allConnected ? 200 : 503 },
+    { healthy, services: results },
+    { status: healthy ? 200 : 503 },
   );
 }

@@ -6,6 +6,7 @@ import { buildReportPrompt } from "@/server/prompts/report";
 import { validateReportResponse } from "@/server/validators/report-response";
 import { searchForReport } from "@/server/tavily";
 import { getAuthUser } from "@/server/auth-guard";
+import { checkRateLimit } from "@/server/rate-limiter";
 import { FieldValue } from "firebase-admin/firestore";
 import type { ReportRequest, AIRunCreateInput } from "@/types";
 
@@ -13,6 +14,10 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getAuthUser();
     if (user instanceof Response) return user;
+
+    // Rate limit: 시간당 5회
+    const rateLimited = await checkRateLimit(user.userId, "deep_report", 5);
+    if (rateLimited) return rateLimited;
 
     const body: ReportRequest = await request.json();
     if (!body.idea_id) {
@@ -25,6 +30,11 @@ export async function POST(request: NextRequest) {
       return errorResponse("NOT_FOUND", "Idea not found", 404);
     }
     const idea = ideaDoc.data()!;
+
+    // 소유권 체크 — 다른 유저 아이디어로 AI 호출 방지 (IDOR)
+    if (idea.user_id !== user.userId) {
+      return errorResponse("NOT_FOUND", "Idea not found", 404);
+    }
 
     const ideaInput = {
       id: ideaDoc.id,
@@ -74,6 +84,7 @@ export async function POST(request: NextRequest) {
 
     // 4. Log ai_run
     const aiRunData: AIRunCreateInput = {
+      user_id: user.userId,
       run_type: "deep_report",
       prompt_version: "prd.v2",
       model: MODELS.ANALYSIS,

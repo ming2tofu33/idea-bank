@@ -5,6 +5,7 @@ import { errorResponse, withRetry } from "@/lib/errors";
 import { buildEvaluationPrompt } from "@/server/prompts/evaluation";
 import { validateEvaluationResponse } from "@/server/validators/evaluation-response";
 import { getAuthUser } from "@/server/auth-guard";
+import { checkRateLimit } from "@/server/rate-limiter";
 import { FieldValue } from "firebase-admin/firestore";
 import type { EvaluateRequest, AIRunCreateInput } from "@/types";
 
@@ -12,6 +13,10 @@ export async function POST(request: NextRequest) {
   try {
     const user = await getAuthUser();
     if (user instanceof Response) return user;
+
+    // Rate limit: 시간당 5회
+    const rateLimited = await checkRateLimit(user.userId, "evaluation", 5);
+    if (rateLimited) return rateLimited;
 
     const body: EvaluateRequest = await request.json();
     if (!body.idea_id) {
@@ -24,6 +29,11 @@ export async function POST(request: NextRequest) {
       return errorResponse("NOT_FOUND", "Idea not found", 404);
     }
     const idea = ideaDoc.data()!;
+
+    // 소유권 체크 — 다른 유저 아이디어로 AI 호출 방지 (IDOR)
+    if (idea.user_id !== user.userId) {
+      return errorResponse("NOT_FOUND", "Idea not found", 404);
+    }
 
     // 2. Fetch deep report (required before evaluation)
     if (!idea.deep_report_id) {
@@ -82,6 +92,7 @@ export async function POST(request: NextRequest) {
 
     // 4. Log ai_run
     const aiRunData: AIRunCreateInput = {
+      user_id: user.userId,
       run_type: "evaluation",
       prompt_version: "eval.v1",
       model: MODELS.ANALYSIS,

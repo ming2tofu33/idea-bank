@@ -7,6 +7,7 @@ export type SaveStatus = "pending" | "saved" | "failed";
 /** Firestore `ai_runs` collection document (Database-Schema.md section 6) */
 export interface AIRun {
   id: string;
+  user_id: string;
   run_type: AIRunType;
   prompt_version: string;
   model: string;

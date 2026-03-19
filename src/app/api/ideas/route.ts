@@ -14,8 +14,10 @@ export async function GET(request: NextRequest) {
     const { searchParams } = request.nextUrl;
     const status = searchParams.get("status");
     const bookmarked = searchParams.get("bookmarked");
-    const limit = parseInt(searchParams.get("limit") || "50", 10);
-    const offset = parseInt(searchParams.get("offset") || "0", 10);
+    const rawLimit = parseInt(searchParams.get("limit") || "50", 10);
+    const limit = Math.min(Math.max(1, rawLimit), 100); // 1~100 사이로 제한
+    const rawOffset = parseInt(searchParams.get("offset") || "0", 10);
+    const offset = Math.max(0, rawOffset);
 
     let query: FirebaseFirestore.Query = collections.ideas.where(
       "user_id",

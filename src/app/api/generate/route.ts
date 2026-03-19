@@ -5,6 +5,7 @@ import { errorResponse, withRetry } from "@/lib/errors";
 import { buildGenerationPrompt } from "@/server/prompts/generation";
 import { validateGenerateResponse } from "@/server/validators/idea-response";
 import { getAuthUser } from "@/server/auth-guard";
+import { checkRateLimit } from "@/server/rate-limiter";
 import { FieldValue } from "firebase-admin/firestore";
 import type { GenerateRequest, AIRunCreateInput } from "@/types";
 
@@ -14,6 +15,10 @@ export async function POST(request: NextRequest) {
     const user = await getAuthUser();
     if (user instanceof Response) return user;
 
+    // Rate limit: 시간당 10회
+    const rateLimited = await checkRateLimit(user.userId, "idea_generation", 10);
+    if (rateLimited) return rateLimited;
+
     const body: GenerateRequest = await request.json();
 
     if (!body.keywords?.length || !body.mode) {
@@ -22,6 +27,12 @@ export async function POST(request: NextRequest) {
         "keywords and mode are required",
         400,
       );
+    }
+    if (body.keywords.length > 20) {
+      return errorResponse("BAD_REQUEST", "Too many keywords (max 20)", 400);
+    }
+    if (body.keywords.some((k: string) => k.length > 100)) {
+      return errorResponse("BAD_REQUEST", "Keyword too long (max 100 chars)", 400);
     }
 
     // 1. Fetch recent 30-day titles for duplicate prevention
@@ -65,6 +76,7 @@ export async function POST(request: NextRequest) {
 
     // 4. Log to ai_runs
     const aiRunData: AIRunCreateInput = {
+      user_id: user.userId,
       run_type: "idea_generation",
       prompt_version: "idea.v1",
       model: MODELS.GENERATION,

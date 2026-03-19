@@ -63,10 +63,13 @@ export async function PATCH(
       }
     }
 
+    // 허용된 필드만 업데이트 (Mass Assignment 방지 — user_id 등 민감 필드 제외)
     const updateData: Record<string, unknown> = {
-      ...body,
       last_reviewed: FieldValue.serverTimestamp(),
     };
+    if (body.status !== undefined) updateData.status = body.status;
+    if (body.bookmarked !== undefined) updateData.bookmarked = body.bookmarked;
+
     await collections.ideas.doc(id).update(updateData);
 
     const updated = await collections.ideas.doc(id).get();

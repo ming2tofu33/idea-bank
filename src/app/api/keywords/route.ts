@@ -60,6 +60,9 @@ export async function POST(request: NextRequest) {
         400,
       );
     }
+    if (body.keyword.trim().length > 50) {
+      return errorResponse("BAD_REQUEST", "Keyword too long (max 50 chars)", 400);
+    }
 
     const validCategories = ["who", "domain", "tech", "value", "money"];
     if (!validCategories.includes(body.category)) {

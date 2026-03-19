@@ -1,0 +1,38 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 기본: 모든 접근 거부 (화이트리스트 방식)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // ideas: 본인 데이터만 읽기/쓰기
+    match /ideas/{ideaId} {
+      allow read, update, delete: if request.auth != null
+        && request.auth.token.email == resource.data.user_id;
+      allow create: if request.auth != null
+        && request.auth.token.email == request.resource.data.user_id;
+    }
+
+    // keywords: fixed는 인증된 모두 읽기, custom은 본인만
+    match /keywords/{keywordId} {
+      allow read: if request.auth != null
+        && (resource.data.source == "fixed"
+            || request.auth.token.email == resource.data.user_id);
+      allow create: if request.auth != null
+        && request.resource.data.source == "custom"
+        && request.auth.token.email == request.resource.data.user_id;
+      allow delete: if request.auth != null
+        && resource.data.source == "custom"
+        && request.auth.token.email == resource.data.user_id;
+    }
+
+    // deep_reports, evaluations, ai_runs, sessions: Admin SDK 전용 (클라이언트 접근 불가)
+    match /deep_reports/{id} { allow read, write: if false; }
+    match /evaluations/{id} { allow read, write: if false; }
+    match /ai_runs/{id} { allow read, write: if false; }
+    match /sessions/{id} { allow read, write: if false; }
+    match /_health_check/{id} { allow read, write: if false; }
+  }
+}
