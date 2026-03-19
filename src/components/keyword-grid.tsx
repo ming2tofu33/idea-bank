@@ -44,7 +44,7 @@ export function KeywordGrid({ keywords, onDelete, deleteLoading }: KeywordGridPr
                     key={keyword.id}
                     className={cn(
                       "floating-bubble flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-semibold",
-                      "bg-surface shadow-marshmallow border-white/60 text-text-main",
+                      "bg-surface border-border text-text-main",
                       isDeleting && "opacity-50",
                     )}
                   >
