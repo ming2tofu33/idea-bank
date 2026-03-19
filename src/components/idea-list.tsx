@@ -127,8 +127,17 @@ export function IdeaList({
       ))}
 
       {ideas.length === 0 && (
-        <div className="bg-surface rounded-card-lg shadow-marshmallow-inset p-12 text-center">
-          <p className="text-text-muted">아이디어가 없습니다</p>
+        <div className="bg-surface rounded-card-lg shadow-marshmallow-inset p-12 text-center space-y-3">
+          <p className="text-text-muted text-sm">아직 아이디어가 없습니다</p>
+          <p className="text-xs text-text-muted">
+            매일 5분 키워드를 조합해 첫 아이디어를 만들어 보세요
+          </p>
+          <Link
+            href="/generate"
+            className="inline-block mt-2 text-xs font-semibold text-primary underline underline-offset-2"
+          >
+            아이디어 생성하러 가기 →
+          </Link>
         </div>
       )}
     </div>
