@@ -84,7 +84,7 @@ export function KeywordPicker({ selectedKeywords, onToggle }: KeywordPickerProps
                     key={keyword.id}
                     onClick={() => onToggle(keyword)}
                     className={cn(
-                      "floating-bubble flex items-center gap-2.5 rounded-full px-6 py-3 border text-sm font-semibold transition-all",
+                      "group floating-bubble flex items-center gap-2.5 rounded-full px-6 py-3 border text-sm font-semibold transition-all",
                       isSelected
                         ? cn(
                             "shadow-marshmallow-inset",

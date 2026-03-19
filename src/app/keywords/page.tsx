@@ -81,29 +81,39 @@ export default function KeywordsPage() {
         <h2 className="text-sm font-bold text-text-main mb-4">
           커스텀 키워드 추가
         </h2>
-        <div className="flex gap-3">
-          <Input
-            value={newKeyword}
-            onChange={(e) => setNewKeyword(e.target.value)}
-            placeholder="새 키워드 입력"
-            className="flex-1"
-            onKeyDown={(e) => e.key === "Enter" && handleAdd()}
-          />
-          <Select
-            value={newCategory}
-            onValueChange={(v) => setNewCategory(v as KeywordCategory)}
-          >
-            <SelectTrigger className="w-32">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {CATEGORY_ORDER.map((cat) => (
-                <SelectItem key={cat} value={cat}>
-                  {cat.charAt(0).toUpperCase() + cat.slice(1)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className="flex gap-3 items-end">
+          <div className="flex-1 space-y-1">
+            <label htmlFor="new-keyword" className="text-xs font-semibold text-text-muted uppercase tracking-wide">
+              키워드
+            </label>
+            <Input
+              id="new-keyword"
+              value={newKeyword}
+              onChange={(e) => setNewKeyword(e.target.value)}
+              placeholder="새 키워드 입력"
+              onKeyDown={(e) => e.key === "Enter" && handleAdd()}
+            />
+          </div>
+          <div className="space-y-1">
+            <label htmlFor="new-category" className="text-xs font-semibold text-text-muted uppercase tracking-wide">
+              카테고리
+            </label>
+            <Select
+              value={newCategory}
+              onValueChange={(v) => setNewCategory(v as KeywordCategory)}
+            >
+              <SelectTrigger id="new-category" className="w-32">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {CATEGORY_ORDER.map((cat) => (
+                  <SelectItem key={cat} value={cat}>
+                    {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
           <Button onClick={handleAdd} disabled={addLoading || !newKeyword.trim()}>
             <Plus className="size-4" />
             <span>{addLoading ? "추가 중..." : "추가"}</span>

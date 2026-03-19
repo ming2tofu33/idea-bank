@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { CategoryBadge } from "@/components/category-badge";
 import { Bookmark, BookmarkCheck, AlertTriangle } from "lucide-react";
@@ -27,22 +27,16 @@ interface IdeaCardProps {
 }
 
 export function IdeaCard({ idea, onBookmarkToggle, compact }: IdeaCardProps) {
-  const router = useRouter();
-
-  const handleClick = () => {
-    router.push(`/ideas/${idea.id}`);
-  };
-
   const handleBookmark = (e: React.MouseEvent) => {
-    e.stopPropagation();
+    e.preventDefault(); // Link 내부에서 네비게이션 차단
     onBookmarkToggle?.(idea.id, !idea.bookmarked);
   };
 
   return (
-    <div
-      onClick={handleClick}
+    <Link
+      href={`/ideas/${idea.id}`}
       className={cn(
-        "bg-card text-card-foreground rounded-card-lg shadow-marshmallow border border-border cursor-pointer transition-all duration-300 hover:shadow-marshmallow-hover hover:-translate-y-0.5",
+        "block bg-card text-card-foreground rounded-card-lg shadow-marshmallow border border-border cursor-pointer transition-all duration-300 hover:shadow-marshmallow-hover hover:-translate-y-0.5",
         compact ? "p-4" : "p-6",
       )}
     >
@@ -134,7 +128,7 @@ export function IdeaCard({ idea, onBookmarkToggle, compact }: IdeaCardProps) {
           ))}
         </div>
       )}
-    </div>
+    </Link>
   );
 }
 

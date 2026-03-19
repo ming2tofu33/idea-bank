@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { STATUS_LABELS } from "@/lib/constants";
 import { Badge } from "@/components/ui/badge";
@@ -17,8 +17,6 @@ export function IdeaList({
   ideas,
   onBookmarkToggle,
 }: IdeaListProps) {
-  const router = useRouter();
-
   return (
     <div className="space-y-2">
       {/* Desktop: table header */}
@@ -33,8 +31,8 @@ export function IdeaList({
       {ideas.map((idea) => (
         <div key={idea.id}>
           {/* Desktop: table row */}
-          <div
-            onClick={() => router.push(`/ideas/${idea.id}`)}
+          <Link
+            href={`/ideas/${idea.id}`}
             className="hidden md:grid grid-cols-[1fr_100px_60px_80px_100px] gap-4 items-center bg-surface rounded-card shadow-marshmallow p-4 cursor-pointer transition-all duration-300 hover:shadow-marshmallow-hover hover:-translate-y-0.5"
           >
             <div className="min-w-0">
@@ -69,7 +67,7 @@ export function IdeaList({
               <BookmarkButton
                 bookmarked={idea.bookmarked}
                 onClick={(e) => {
-                  e.stopPropagation();
+                  e.preventDefault(); // Link 내부에서 네비게이션 차단
                   onBookmarkToggle(idea.id, !idea.bookmarked);
                 }}
               />
@@ -78,12 +76,12 @@ export function IdeaList({
             <span className="text-xs text-text-muted">
               {formatDate(idea.created_at)}
             </span>
-          </div>
+          </Link>
 
           {/* Mobile: card view */}
-          <div
-            onClick={() => router.push(`/ideas/${idea.id}`)}
-            className="md:hidden bg-surface rounded-card-lg shadow-marshmallow p-4 cursor-pointer transition-all duration-300 hover:shadow-marshmallow-hover"
+          <Link
+            href={`/ideas/${idea.id}`}
+            className="md:hidden block bg-surface rounded-card-lg shadow-marshmallow p-4 cursor-pointer transition-all duration-300 hover:shadow-marshmallow-hover"
           >
             <div className="flex items-start justify-between gap-3">
               <div className="min-w-0 flex-1">
@@ -97,7 +95,7 @@ export function IdeaList({
               <BookmarkButton
                 bookmarked={idea.bookmarked}
                 onClick={(e) => {
-                  e.stopPropagation();
+                  e.preventDefault(); // Link 내부에서 네비게이션 차단
                   onBookmarkToggle(idea.id, !idea.bookmarked);
                 }}
               />
@@ -124,7 +122,7 @@ export function IdeaList({
                 {formatDate(idea.created_at)}
               </span>
             </div>
-          </div>
+          </Link>
         </div>
       ))}
 
