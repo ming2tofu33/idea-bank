@@ -2,12 +2,29 @@ import { NextRequest, NextResponse } from "next/server";
 import { collections } from "@/server/firebase";
 import { callOpenAI, MODELS } from "@/server/openai";
 import { errorResponse, withRetry } from "@/lib/errors";
-import { buildGenerationPrompt } from "@/server/prompts/generation";
+import {
+  buildCuratedIdeasPrompt,
+  buildSeedGenerationPrompt,
+} from "@/server/prompts/generation";
 import { validateGenerateResponse } from "@/server/validators/idea-response";
 import { getAuthUser } from "@/server/auth-guard";
 import { checkRateLimit } from "@/server/rate-limiter";
 import { FieldValue } from "firebase-admin/firestore";
-import type { GenerateRequest, AIRunCreateInput } from "@/types";
+import {
+  flattenCategorizedKeywords,
+  selectFinalCandidates,
+} from "@/server/generation-pipeline";
+import {
+  validateCuratedIdeaCandidatesResponse,
+  validateSeedGenerationResponse,
+} from "@/server/validators/generation-candidates";
+import type {
+  AIRunCreateInput,
+  CategorizedKeywords,
+  GenerateRequest,
+  GenerateResponse,
+  IdeaGenerated,
+} from "@/types";
 
 export async function POST(request: NextRequest) {
   const startTime = Date.now();
@@ -21,17 +38,24 @@ export async function POST(request: NextRequest) {
 
     const body: GenerateRequest = await request.json();
 
-    if (!body.keywords?.length || !body.mode) {
+    if (!body.categorizedKeywords || !body.mode) {
       return errorResponse(
         "BAD_REQUEST",
-        "keywords and mode are required",
+        "categorizedKeywords and mode are required",
         400,
       );
     }
-    if (body.keywords.length > 20) {
+
+    const ck: CategorizedKeywords = body.categorizedKeywords;
+    const allKeywords = flattenCategorizedKeywords(ck);
+
+    if (allKeywords.length === 0) {
+      return errorResponse("BAD_REQUEST", "At least one keyword is required", 400);
+    }
+    if (allKeywords.length > 20) {
       return errorResponse("BAD_REQUEST", "Too many keywords (max 20)", 400);
     }
-    if (body.keywords.some((k: string) => k.length > 100)) {
+    if (allKeywords.some((k) => k.length > 100)) {
       return errorResponse("BAD_REQUEST", "Keyword too long (max 100 chars)", 400);
     }
 
@@ -47,66 +71,166 @@ export async function POST(request: NextRequest) {
       (d) => d.data().title as string,
     );
 
-    // 2. Build prompt
-    const { systemPrompt, userPrompt } = buildGenerationPrompt(
-      body.keywords,
+    // 2. Stage 1 — generate raw seeds
+    const {
+      systemPrompt: seedSystemPrompt,
+      userPrompt: seedUserPrompt,
+    } = buildSeedGenerationPrompt(
+      ck,
       body.mode,
       existingTitles,
     );
 
-    // 3. Call OpenAI (with 1 retry on validation failure)
-    let aiResult = await callOpenAI({
-      model: MODELS.GENERATION,
-      systemPrompt,
-      userPrompt,
-    });
-
-    let validation = validateGenerateResponse(aiResult.content);
+    let totalInputTokens = 0;
+    let totalOutputTokens = 0;
+    let totalLatencyMs = 0;
     let retryCount = 0;
 
-    if (!validation.ok) {
+    let seedResult = await callOpenAI({
+      model: MODELS.GENERATION,
+      systemPrompt: seedSystemPrompt,
+      userPrompt: seedUserPrompt,
+    });
+    totalInputTokens += seedResult.inputTokens;
+    totalOutputTokens += seedResult.outputTokens;
+    totalLatencyMs += seedResult.latencyMs;
+
+    let seedValidation = validateSeedGenerationResponse(seedResult.content);
+
+    if (!seedValidation.ok) {
       retryCount = 1;
-      aiResult = await callOpenAI({
+      seedResult = await callOpenAI({
         model: MODELS.GENERATION,
-        systemPrompt,
-        userPrompt,
+        systemPrompt: seedSystemPrompt,
+        userPrompt: seedUserPrompt,
       });
-      validation = validateGenerateResponse(aiResult.content);
+      totalInputTokens += seedResult.inputTokens;
+      totalOutputTokens += seedResult.outputTokens;
+      totalLatencyMs += seedResult.latencyMs;
+      seedValidation = validateSeedGenerationResponse(seedResult.content);
     }
 
-    // 4. Log to ai_runs
+    if (!seedValidation.ok) {
+      const failedRun: AIRunCreateInput = {
+        user_id: user.userId,
+        run_type: "idea_generation",
+        prompt_version: "idea.v3",
+        model: MODELS.GENERATION,
+        input_tokens: totalInputTokens,
+        output_tokens: totalOutputTokens,
+        latency_ms: totalLatencyMs,
+        validation_status: "failed",
+        save_status: "failed",
+        retry_count: retryCount,
+        error_message: seedValidation.error,
+      };
+
+      await collections.aiRuns.add({
+        ...failedRun,
+        created_at: FieldValue.serverTimestamp(),
+      });
+      return errorResponse("VALIDATION_FAILED", seedValidation.error, 422);
+    }
+
+    // 3. Stage 2 — curate and rewrite the strongest candidates
+    const {
+      systemPrompt: curateSystemPrompt,
+      userPrompt: curateUserPrompt,
+    } = buildCuratedIdeasPrompt(
+      seedValidation.data.seeds,
+      allKeywords,
+      body.mode,
+    );
+
+    let curatedResult = await callOpenAI({
+      model: MODELS.GENERATION,
+      systemPrompt: curateSystemPrompt,
+      userPrompt: curateUserPrompt,
+    });
+    totalInputTokens += curatedResult.inputTokens;
+    totalOutputTokens += curatedResult.outputTokens;
+    totalLatencyMs += curatedResult.latencyMs;
+
+    let curatedValidation = validateCuratedIdeaCandidatesResponse(
+      curatedResult.content,
+    );
+
+    if (!curatedValidation.ok) {
+      retryCount += 1;
+      curatedResult = await callOpenAI({
+        model: MODELS.GENERATION,
+        systemPrompt: curateSystemPrompt,
+        userPrompt: curateUserPrompt,
+      });
+      totalInputTokens += curatedResult.inputTokens;
+      totalOutputTokens += curatedResult.outputTokens;
+      totalLatencyMs += curatedResult.latencyMs;
+      curatedValidation = validateCuratedIdeaCandidatesResponse(
+        curatedResult.content,
+      );
+    }
+
     const aiRunData: AIRunCreateInput = {
       user_id: user.userId,
       run_type: "idea_generation",
-      prompt_version: "idea.v1",
+      prompt_version: "idea.v3",
       model: MODELS.GENERATION,
-      input_tokens: aiResult.inputTokens,
-      output_tokens: aiResult.outputTokens,
-      latency_ms: aiResult.latencyMs,
-      validation_status: validation.ok ? "passed" : "failed",
+      input_tokens: totalInputTokens,
+      output_tokens: totalOutputTokens,
+      latency_ms: totalLatencyMs,
+      validation_status: curatedValidation.ok ? "passed" : "failed",
       save_status: "pending",
       retry_count: retryCount,
-      error_message: validation.ok ? null : validation.error,
+      error_message: curatedValidation.ok ? null : curatedValidation.error,
     };
 
-    if (!validation.ok) {
+    if (!curatedValidation.ok) {
       aiRunData.save_status = "failed";
       await collections.aiRuns.add({
         ...aiRunData,
         created_at: FieldValue.serverTimestamp(),
       });
-      return errorResponse("VALIDATION_FAILED", validation.error, 422);
+      return errorResponse("VALIDATION_FAILED", curatedValidation.error, 422);
     }
 
-    // 5. Save 10 ideas to Firestore
+    const finalists = selectFinalCandidates(curatedValidation.data.candidates, 10);
+    const ideas: IdeaGenerated[] = finalists.map((candidate, index) => ({
+      rank: index + 1,
+      title: candidate.title,
+      summary: candidate.summary,
+      target_user: candidate.target_user,
+      problem: candidate.problem,
+      solution_hint: candidate.solution_hint,
+    }));
+
+    const finalResponse: GenerateResponse = {
+      run_type: "idea_generation",
+      prompt_version: "idea.v3",
+      keywords_used: allKeywords,
+      ideas,
+    };
+
+    const finalValidation = validateGenerateResponse(JSON.stringify(finalResponse));
+    if (!finalValidation.ok) {
+      aiRunData.validation_status = "failed";
+      aiRunData.save_status = "failed";
+      aiRunData.error_message = finalValidation.error;
+      await collections.aiRuns.add({
+        ...aiRunData,
+        created_at: FieldValue.serverTimestamp(),
+      });
+      return errorResponse("VALIDATION_FAILED", finalValidation.error, 422);
+    }
+
+    // 4. Save 10 ideas to Firestore
     const savedIds: string[] = [];
-    for (const idea of validation.data.ideas) {
+    for (const idea of finalResponse.ideas) {
       const docRef = await withRetry(() =>
         collections.ideas.add({
           user_id: user.userId,
           title: idea.title,
           summary: idea.summary,
-          keywords_used: body.keywords,
+          keywords_used: allKeywords,
           generation_mode: body.mode,
           status: "new",
           bookmarked: false,
@@ -125,19 +249,19 @@ export async function POST(request: NextRequest) {
       savedIds.push(docRef.id);
     }
 
-    // 6. Update ai_run log
+    // 5. Update ai_run log
     aiRunData.save_status = "saved";
     await collections.aiRuns.add({
       ...aiRunData,
       created_at: FieldValue.serverTimestamp(),
     });
 
-    // 7. Save session log
+    // 6. Save session log
     const sessionRef = await collections.sessions.add({
       user_id: user.userId,
       session_date: FieldValue.serverTimestamp(),
       session_type: "diverge",
-      keywords_selected: body.keywords,
+      keywords_selected: allKeywords,
       generation_mode: body.mode,
       ideas_generated: savedIds.length,
       ideas_bookmarked: [],
@@ -146,7 +270,7 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({
-      ...validation.data,
+      ...finalResponse,
       saved_ids: savedIds,
       session_id: sessionRef.id,
     });

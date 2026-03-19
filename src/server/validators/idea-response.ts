@@ -26,11 +26,18 @@ export function validateGenerateResponse(
     };
   }
 
+  const titles: string[] = [];
   for (let i = 0; i < data.ideas.length; i++) {
     const idea = data.ideas[i] as Record<string, unknown>;
     if (!idea.title || !idea.summary) {
       return { ok: false, error: `ideas[${i}] missing title or summary` };
     }
+    titles.push((idea.title as string).trim().toLowerCase());
+  }
+
+  // 중복 제목 체크
+  if (new Set(titles).size !== titles.length) {
+    return { ok: false, error: "Duplicate titles detected in generated ideas" };
   }
 
   return { ok: true, data: data as unknown as GenerateResponse };

@@ -10,7 +10,7 @@ import { generateIdeas, patchIdea, fetchKeywords } from "@/lib/api";
 import { useNavigationBlock } from "@/hooks/use-navigation-block";
 import { Sparkles, RotateCcw, AlertCircle, History } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import type { Keyword, GenerationMode, IdeaGenerated } from "@/types";
+import type { Keyword, GenerationMode, IdeaGenerated, CategorizedKeywords } from "@/types";
 
 const BLOCK_MESSAGES = [
   { emoji: "🤔", text: "AI가 지금 막 열심히 생각 중이에요" },
@@ -163,9 +163,15 @@ function GeneratePage() {
     setStep("loading");
     setError(null);
     try {
-      const keywordStrings = selectedKeywords.map((k) => k.keyword);
+      const categorizedKeywords: CategorizedKeywords = {
+        who: selectedKeywords.filter((k) => k.category === "who").map((k) => k.keyword),
+        domain: selectedKeywords.filter((k) => k.category === "domain").map((k) => k.keyword),
+        tech: selectedKeywords.filter((k) => k.category === "tech").map((k) => k.keyword),
+        value: selectedKeywords.filter((k) => k.category === "value").map((k) => k.keyword),
+        money: selectedKeywords.filter((k) => k.category === "money").map((k) => k.keyword),
+      };
       const result = await generateIdeas({
-        keywords: keywordStrings,
+        categorizedKeywords,
         mode: selectedMode,
       });
       const ideasWithState: GeneratedIdea[] = result.ideas.map((idea, i) => ({

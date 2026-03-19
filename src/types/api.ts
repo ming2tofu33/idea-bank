@@ -1,8 +1,17 @@
 // ── Request types ──────────────────────────────
 
+/** 카테고리별로 분류된 키워드 구조 — 모드별 프롬프트에 사용 */
+export interface CategorizedKeywords {
+  who: string[];
+  domain: string[];
+  tech: string[];
+  value: string[];
+  money: string[];
+}
+
 /** POST /api/generate */
 export interface GenerateRequest {
-  keywords: string[];
+  categorizedKeywords: CategorizedKeywords;
   mode: "full_match" | "forced_pairing" | "serendipity";
 }
 
