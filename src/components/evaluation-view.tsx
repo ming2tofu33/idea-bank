@@ -3,7 +3,8 @@
 import { ScoreRing } from "@/components/score-ring";
 import { RationaleAccordion } from "@/components/rationale-accordion";
 import { Badge } from "@/components/ui/badge";
-import { ShieldCheck, ShieldAlert, ListChecks } from "lucide-react";
+import { ShieldCheck, ShieldAlert, ListChecks, AlertTriangle } from "lucide-react";
+import { cn } from "@/lib/utils";
 import type { EvaluateResponse } from "@/types";
 
 interface EvaluationViewProps {
@@ -17,7 +18,20 @@ const DIMENSION_WEIGHTS: Record<string, number> = {
   money: 0.2,
 };
 
+const DIMENSION_KO: Record<string, string> = {
+  market: "시장성",
+  build: "실행 가능성",
+  edge: "독창성",
+  money: "수익성",
+};
+
 export function EvaluationView({ evaluation }: EvaluationViewProps) {
+  const dims = ["market", "build", "edge", "money"] as const;
+  const weakestDim = dims.reduce(
+    (min, dim) => evaluation.scores[dim] < evaluation.scores[min] ? dim : min,
+    dims[0],
+  );
+
   return (
     <div className="max-w-[800px] mx-auto space-y-8">
       {/* Header */}
@@ -31,32 +45,52 @@ export function EvaluationView({ evaluation }: EvaluationViewProps) {
       {/* Score Ring + Bar Chart row */}
       <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-8 items-center">
         {/* Total Score Ring */}
-        <div className="flex justify-center relative">
-          <ScoreRing score={evaluation.total_score} size={160} />
+        <div className="flex flex-col items-center gap-2">
+          <div className="relative">
+            <ScoreRing score={evaluation.total_score} size={160} />
+          </div>
+          <div className="flex gap-3 text-[10px] text-text-muted">
+            <span className="flex items-center gap-1">
+              <span className="inline-block size-2 rounded-full bg-score-high-stroke" />
+              80+ 우수
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="inline-block size-2 rounded-full bg-score-mid-stroke" />
+              60+ 양호
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="inline-block size-2 rounded-full bg-score-low-stroke" />
+              미만 보완
+            </span>
+          </div>
         </div>
 
         {/* Score Bars */}
         <div className="space-y-4">
-          {(["market", "build", "edge", "money"] as const).map((dim) => {
+          {dims.map((dim) => {
             const score = evaluation.scores[dim];
+            const isWeakest = dim === weakestDim;
             return (
               <div key={dim} className="flex items-center gap-3">
-                <span className="text-xs font-bold text-text-muted w-16 text-right">
-                  {dim === "market"
-                    ? "시장성"
-                    : dim === "build"
-                      ? "실행"
-                      : dim === "edge"
-                        ? "독창성"
-                        : "수익성"}
+                <span className={cn(
+                  "text-xs font-bold w-16 text-right",
+                  isWeakest ? "text-score-low-text" : "text-text-muted",
+                )}>
+                  {DIMENSION_KO[dim]}
                 </span>
                 <div className="flex-1 h-3 bg-muted rounded-full overflow-hidden">
                   <div
-                    className="h-full rounded-full bg-primary transition-all duration-500 ease-out"
+                    className={cn(
+                      "h-full rounded-full transition-all duration-500 ease-out",
+                      isWeakest ? "bg-score-low-stroke" : "bg-primary",
+                    )}
                     style={{ width: `${score}%` }}
                   />
                 </div>
-                <span className="text-sm font-bold text-text-main w-8">
+                <span className={cn(
+                  "text-sm font-bold w-8",
+                  isWeakest ? "text-score-low-text" : "text-text-main",
+                )}>
                   {score}
                 </span>
               </div>
@@ -64,6 +98,16 @@ export function EvaluationView({ evaluation }: EvaluationViewProps) {
           })}
         </div>
       </div>
+
+      {/* Weakest dimension warning */}
+      {evaluation.scores[weakestDim] < 60 && (
+        <div className="flex items-start gap-2 bg-score-low-bg rounded-xl px-4 py-3 border border-score-low-stroke/30">
+          <AlertTriangle className="size-4 text-score-low-text shrink-0 mt-0.5" />
+          <p className="text-sm text-score-low-text">
+            <span className="font-bold">{DIMENSION_KO[weakestDim]}</span>이 가장 취약합니다 ({evaluation.scores[weakestDim]}점). 아코디언을 펼쳐 근거와 반론을 확인하세요.
+          </p>
+        </div>
+      )}
 
       {/* Rationale Accordions */}
       <div className="space-y-3">
