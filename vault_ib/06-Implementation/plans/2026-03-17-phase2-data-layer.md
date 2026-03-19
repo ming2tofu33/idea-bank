@@ -6,7 +6,7 @@
 
 **Architecture:** API Routes는 얇은 핸들러(요청 파싱 + 응답 반환)만 담당. 실제 DB 로직은 `src/server/` 아래 모듈에 위치. 에러 처리 유틸은 `src/lib/`에 공유 코드로 배치.
 
-**Tech Stack:** Next.js 16 API Routes, Firebase Admin SDK (Firestore), TypeScript, tsx (스크립트 실행)
+**Tech Stack:** Next.js 15 API Routes, Firebase Admin SDK (Firestore), TypeScript, tsx (스크립트 실행)
 
 **Vault 참조:** `vault_ib/02-Architecture/Database-Schema.md`, `vault_ib/02-Architecture/Backend-API.md`, `vault_ib/03-Features/Idea-Lifecycle.md`, `vault_ib/99-Reference/Keyword-Pool.md`
 

@@ -67,7 +67,10 @@ tags:
 |---|---|---|
 | [[V1-MVP-Plan]] | V1 구현 계획 | Active |
 | [[V2-Enhancement]] | V2 확장 범위 | Planning |
-| `plans/2026-03-16-v1-mvp-implementation.md` | V1 Phase별 구현 계획 (25 Tasks) | Active |
+| `plans/2026-03-16-v1-mvp-implementation.md` | V1 Phase별 구현 계획 (6 Phase, 25 Tasks) | Active |
+| `plans/2026-03-17-phase2-data-layer.md` | Phase 2 Data Layer 상세 구현 (코드 포함) | Active |
+| `plans/2026-03-19-security-validation.md` | 보안 취약점 수정 계획 (IDOR, Rate Limit 등) | Active |
+| `plans/2026-03-19-ux-fixes.md` | UX/접근성 이슈 수정 계획 (4개 항목) | Active |
 
 ## 08-Design — 디자인 시스템
 
@@ -86,3 +89,9 @@ tags:
 | [[ADR-Log]] | 아키텍처 결정 기록 (5개 ADR) | Active |
 | [[API-Endpoints]] | 엔드포인트 목록 | Draft |
 | [[Keyword-Pool]] | 전체 키워드 풀 원본 (96개) | Active |
+
+## Meta
+
+| 파일 | 설명 |
+|---|---|
+| [[VAULT_RULES]] | Vault 문서 작성 규칙 (프론트매터, 링크, 칼아웃 등) |
