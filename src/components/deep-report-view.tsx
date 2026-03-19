@@ -20,7 +20,7 @@ interface DeepReportViewProps {
 
 export function DeepReportView({ report, ideaTitle }: DeepReportViewProps) {
   return (
-    <article className="paper-texture rounded-2xl shadow-marshmallow p-8 md:p-12 max-w-[800px] mx-auto relative overflow-hidden">
+    <article className="paper-texture rounded-2xl shadow-marshmallow p-8 md:p-12 max-w-[800px] mx-auto relative">
       {/* Header */}
       <div className="mb-12 border-b border-border pb-6">
         <span className="text-xs font-bold tracking-widest text-primary uppercase mb-2 block">
@@ -185,7 +185,7 @@ function Section({
 }) {
   return (
     <section className="mb-12 relative">
-      <div className={cn("absolute -left-3 -top-5 md:-left-8 transform", rotate)}>
+      <div className={cn("absolute left-0 -top-6 md:-left-6 transform", rotate)}>
         <div
           className={cn(
             "shadow-md px-3 py-1.5 rounded-sm text-xs font-bold",
