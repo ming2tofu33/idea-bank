@@ -10,6 +10,7 @@ import {
   Tags,
   Lightbulb,
   LogOut,
+  FileText,
 } from "lucide-react";
 import {
   Sidebar,
@@ -28,6 +29,7 @@ const NAV_ITEMS = [
   { href: "/", label: "대시보드", icon: LayoutDashboard },
   { href: "/generate", label: "발산 세션", icon: Sparkles },
   { href: "/ideas", label: "아이디어", icon: Layers },
+  { href: "/blueprints", label: "Blueprints", icon: FileText },
   { href: "/keywords", label: "키워드 관리", icon: Tags },
 ] as const;
 
