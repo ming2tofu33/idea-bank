@@ -2,10 +2,19 @@
 
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import { useFetch } from "@/hooks/use-fetch";
 import { fetchIdea, patchIdea, generateReport, evaluateIdea } from "@/lib/api";
-import { DeepReportView } from "@/components/deep-report-view";
-import { EvaluationView } from "@/components/evaluation-view";
+
+const DeepReportView = dynamic(
+  () => import("@/components/deep-report-view").then((m) => m.DeepReportView),
+  { ssr: false },
+);
+const EvaluationView = dynamic(
+  () => import("@/components/evaluation-view").then((m) => m.EvaluationView),
+  { ssr: false },
+);
+
 import { CategoryBadge } from "@/components/category-badge";
 import { LoadingSkeleton } from "@/components/loading-skeleton";
 import { Button } from "@/components/ui/button";
