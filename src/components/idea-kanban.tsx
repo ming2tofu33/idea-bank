@@ -33,7 +33,7 @@ export function IdeaKanban({
 }: IdeaKanbanProps) {
   return (
     <div>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 pb-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pb-4">
         {STATUS_COLUMNS.map((status) => {
           const columnIdeas = ideas.filter((i) => i.status === status);
           return (
