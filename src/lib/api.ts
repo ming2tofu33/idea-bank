@@ -8,6 +8,7 @@ import type {
   DeepReportResponse,
   StatsResponse,
   EvaluateResponse,
+  BlueprintsResponse,
 } from "@/types";
 
 async function request<T>(url: string, options?: RequestInit): Promise<T> {
@@ -113,4 +114,16 @@ export function evaluateIdea(
 
 export function fetchStats(): Promise<StatsResponse> {
   return request("/api/stats");
+}
+
+// ── Blueprints ──
+
+export function fetchBlueprints(): Promise<BlueprintsResponse> {
+  return request("/api/blueprints");
+}
+
+export function fetchBlueprintDetail(
+  reportId: string,
+): Promise<DeepReportResponse & { id: string }> {
+  return request(`/api/blueprints/${reportId}`);
 }
