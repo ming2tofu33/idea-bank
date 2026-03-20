@@ -52,11 +52,21 @@ export function patchIdea(id: string, data: IdeaPatchInput): Promise<Idea> {
 
 // ── Keywords ──
 
+let keywordsInflight: Promise<{ keywords: Keyword[] }> | null = null;
+
 export function fetchKeywords(
   category?: string,
 ): Promise<{ keywords: Keyword[] }> {
-  const qs = category ? `?category=${category}` : "";
-  return request(`/api/keywords${qs}`);
+  if (category) {
+    return request(`/api/keywords?category=${category}`);
+  }
+  if (keywordsInflight) return keywordsInflight;
+  keywordsInflight = request<{ keywords: Keyword[] }>("/api/keywords").finally(
+    () => {
+      keywordsInflight = null;
+    },
+  );
+  return keywordsInflight;
 }
 
 export function createKeyword(data: KeywordCreateInput): Promise<Keyword> {
