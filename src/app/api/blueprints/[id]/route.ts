@@ -21,6 +21,10 @@ export async function GET(
 
     const reportData = reportDoc.data()!;
 
+    if (!reportData.idea_id) {
+      return errorResponse("NOT_FOUND", "Blueprint를 찾을 수 없습니다", 404);
+    }
+
     // 소유권 확인 — report의 idea_id로 idea를 조회해 user_id 검증 (IDOR 방지)
     const ideaDoc = await collections.ideas
       .doc(reportData.idea_id as string)
