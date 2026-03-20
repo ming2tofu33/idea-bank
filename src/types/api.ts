@@ -130,3 +130,21 @@ export interface StatsResponse {
   monthly_api_calls: number;
   sessions_this_week: number;
 }
+
+/** GET /api/blueprints 목록 항목 */
+export interface BlueprintListItem {
+  report_id: string;          // deep_report 문서 ID
+  idea_id: string;            // 연결된 idea 문서 ID
+  idea_title: string;
+  idea_problem: string;       // 핵심 문제 한 줄
+  idea_keywords: string[];    // keywords_used
+  total_score: number | null; // evaluation 결과 (없으면 null)
+  has_evaluation: boolean;    // evaluation_id != null
+  created_at: string;         // ISO string (deep_report.created_at 기준)
+}
+
+/** GET /api/blueprints 응답 */
+export interface BlueprintsResponse {
+  blueprints: BlueprintListItem[];
+  count: number;
+}
