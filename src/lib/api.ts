@@ -28,13 +28,13 @@ export function fetchIdeas(params?: {
   status?: string;
   bookmarked?: string;
   limit?: number;
-  offset?: number;
-}): Promise<{ ideas: Idea[]; count: number }> {
+  cursor?: string;
+}): Promise<{ ideas: Idea[]; count: number; next_cursor: string | null }> {
   const query = new URLSearchParams();
   if (params?.status) query.set("status", params.status);
   if (params?.bookmarked) query.set("bookmarked", params.bookmarked);
   if (params?.limit) query.set("limit", String(params.limit));
-  if (params?.offset) query.set("offset", String(params.offset));
+  if (params?.cursor) query.set("cursor", params.cursor);
   const qs = query.toString();
   return request(`/api/ideas${qs ? `?${qs}` : ""}`);
 }

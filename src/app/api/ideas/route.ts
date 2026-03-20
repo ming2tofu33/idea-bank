@@ -15,9 +15,8 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get("status");
     const bookmarked = searchParams.get("bookmarked");
     const rawLimit = parseInt(searchParams.get("limit") || "50", 10);
-    const limit = Math.min(Math.max(1, rawLimit), 100); // 1~100 사이로 제한
-    const rawOffset = parseInt(searchParams.get("offset") || "0", 10);
-    const offset = Math.max(0, rawOffset);
+    const limit = Math.min(Math.max(1, rawLimit), 100);
+    const cursor = searchParams.get("cursor");
 
     let query: FirebaseFirestore.Query = collections.ideas.where(
       "user_id",
@@ -28,7 +27,11 @@ export async function GET(request: NextRequest) {
     if (status) query = query.where("status", "==", status);
     if (bookmarked === "true") query = query.where("bookmarked", "==", true);
 
-    query = query.orderBy("created_at", "desc").limit(limit).offset(offset);
+    query = query.orderBy("created_at", "desc").limit(limit);
+
+    if (cursor) {
+      query = query.startAfter(new Date(cursor));
+    }
 
     const snapshot = await query.get();
     const ideas = snapshot.docs.map((doc) => ({
@@ -36,7 +39,17 @@ export async function GET(request: NextRequest) {
       ...doc.data(),
     }));
 
-    return NextResponse.json({ ideas, count: ideas.length });
+    const lastDoc = snapshot.docs[snapshot.docs.length - 1];
+    const nextCursor =
+      lastDoc
+        ? (lastDoc.data().created_at?.toDate?.()?.toISOString() ?? null)
+        : null;
+
+    return NextResponse.json({
+      ideas,
+      count: ideas.length,
+      next_cursor: ideas.length === limit ? nextCursor : null,
+    });
   } catch (error) {
     return serverErrorResponse("INTERNAL_ERROR", error, "아이디어 목록을 불러오는 중 오류가 발생했습니다");
   }
