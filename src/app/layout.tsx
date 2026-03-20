@@ -14,7 +14,7 @@ const splineSans = Spline_Sans({
 export const metadata: Metadata = {
   title: "Idea Bank",
   description:
-    "매일 아침 5분, 키워드 조합 기반 비즈니스 아이디어 발산 + 평가 + 축적",
+    "매일 아침 5분, 키워드 조합 기반 비즈니스 아이디어 발굴 + 평가 + 축적",
 };
 
 export default function RootLayout({

@@ -82,7 +82,7 @@ export default function DashboardPage() {
                 <div className="flex size-10 items-center justify-center rounded-full bg-white/20">
                   <Sparkles className="size-5" />
                 </div>
-                <h2 className="text-lg font-bold">발산 세션 시작</h2>
+                <h2 className="text-lg font-bold">발굴 세션 시작</h2>
               </div>
               <ArrowRight className="size-5 opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
             </div>
@@ -170,7 +170,7 @@ export default function DashboardPage() {
               아직 북마크한 아이디어가 없습니다
             </p>
             <p className="text-xs text-muted-foreground/70 mt-1">
-              발산 세션에서 마음에 드는 아이디어를 북마크해보세요
+              발굴 세션에서 마음에 드는 아이디어를 북마크해보세요
             </p>
           </div>
         ) : (

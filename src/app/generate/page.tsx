@@ -246,7 +246,7 @@ function GeneratePage() {
       )}
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-text-main">발산 세션</h1>
+        <h1 className="text-3xl font-bold text-text-main">발굴 세션</h1>
         <p className="text-text-muted mt-1">
           새로운 아이디어를 만들어보세요
         </p>
